@@ -42,8 +42,8 @@ const LivenessDetect = () => {
     const response = await fetch('https://idv-eu.kairos.com/v0.1/liveness-verification', {
       method: 'POST',
       headers: {
-        'app_id': 'put_app_id_here',
-        'app_key': 'put_app_key_here',
+        'app_id': process.env.REACT_APP_KAIROS_APP_ID,
+        'app_key': process.env.REACT_APP_KAIROS_APP_KEY,
       },
       body: formData,
     });
