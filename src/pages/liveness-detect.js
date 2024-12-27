@@ -7,7 +7,7 @@ const LivenessDetect = () => {
   const performLivenessDetection = async () => {
     try {
       const formData = new FormData();
-      formData.append('selfie', new File([await (await fetch('./test.jpg')).blob()], 'test.jpg'));
+      formData.append('selfie', new File([await (await fetch('./img/test.jpg')).blob()], 'test.jpg'));
       formData.append('threshold', '0.6');
 
       const response = await fetch('https://idv-eu.kairos.com/v0.1/liveness-verification', {
