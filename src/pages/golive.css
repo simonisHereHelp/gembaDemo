@@ -1,0 +1,124 @@
+#goLiveContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #e1eff0; /* Match ControlCenter background */
+    padding: 5px;
+}
+
+/* Main composite stream container */
+#compositeStreamContainer {
+    width: 85vw; /* Full width of the parent container */
+    height: auto; /* Automatically adjusts height based on content */
+    position: relative;
+    background-color: transparent;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+#compositeStreamContainer video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.participantContainer {
+  position: absolute;
+  top: 0vh;
+  right: 0vw;
+  width: 15vw;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #f8c325;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background-color: rgb(101, 100, 100);
+  z-index: 1000;
+}
+
+/* Video element styling */
+.participantContainer video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Participant Name floating on top */
+.participantName {
+  position: absolute;
+  bottom: 2px;
+  left: 1px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 5px;
+  border-radius: 5px;
+  z-index: 1010; /* Ensure it appears above the video */
+}
+
+/* Container for video toggle icons */
+.video-toggle-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through except on the icons */
+  }
+  
+  /* General styling for video icons */
+  .videoIcon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    pointer-events: auto; /* Enable clicking on the icons */
+    transition: transform 0.2s ease-in-out;
+    filter: drop-shadow(0 0 3px rgb(34, 34, 34)); /* Adds a white shadow for better visibility */
+  }
+  
+  /* Hover effect for video icons */
+  .videoIcon:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 6px rgb(34, 34, 34)); /* Intensifies the shadow on hover */
+  }
+  
+  /* Styling for the video-on state */
+  .videoOn {
+    filter: drop-shadow(0 0 3px rgb(34, 34, 34));
+  }
+  
+  /* Styling for the video-off state */
+  .videoOff {
+    filter: drop-shadow(0 0 3px rgb(34, 34, 34));
+    opacity: 0.8; /* Slightly reduce opacity to indicate the video is off */
+  }
+  /* Home button container */
+  #compositeExit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icons */
+    position: absolute;
+    top: 10px;
+    left: calc((100vw - 85vw) / 2); /* Align to the left edge of compositeStreamContainer */
+    z-index: 1000;
+}
+  /* Home icon styling */
+  .homeIcon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    filter: drop-shadow(0 0 3px white);
+    transition: transform 0.2s ease;
+  }
+  
+  .homeIcon:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 6px white);
+  }
+  

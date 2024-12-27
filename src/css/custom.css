@@ -1,0 +1,36 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #007bff; /* Primary blue */
+  --ifm-color-primary-dark: #0056b3; /* Darker blue */
+  --ifm-color-primary-darker: #004494; /* Even darker blue */
+  --ifm-color-primary-darkest: #003366; /* Darkest blue */
+  --ifm-color-primary-light: #339aff; /* Lighter blue */
+  --ifm-color-primary-lighter: #66b2ff; /* Even lighter blue */
+  --ifm-color-primary-lightest: #99ccff; /* Lightest blue */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #66ccff; /* Primary blue for dark mode */
+  --ifm-color-primary-dark: #3399ff; /* Darker blue for dark mode */
+  --ifm-color-primary-darker: #007acc; /* Even darker blue for dark mode */
+  --ifm-color-primary-darkest: #005999; /* Darkest blue for dark mode */
+  --ifm-color-primary-light: #80d4ff; /* Lighter blue for dark mode */
+  --ifm-color-primary-lighter: #99e0ff; /* Even lighter blue for dark mode */
+  --ifm-color-primary-lightest: #b3ecff; /* Lightest blue for dark mode */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+.navbar__title {
+  font-size: 2.0rem; /* Adjust font size */
+  color: #007acc; /* Change text color */
+  letter-spacing: 0.8px;
+  font-style: italic;
+}
