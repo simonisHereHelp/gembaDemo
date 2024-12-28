@@ -97,7 +97,7 @@ const config = {
             docId: 'pricing', // Updated route
             label: 'Pricing⚙️',
             position: 'right',
-          },
+          }
         ],
       },
       prism: {
