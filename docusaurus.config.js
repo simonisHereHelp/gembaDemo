@@ -27,11 +27,7 @@ const config = {
         },
         theme: {
           customCss: './src/css/custom.css',
-        },
-        gtag: {
-          trackingID: 'G-999X9XX9XX', // Replace with your actual tracking ID
-          anonymizeIP: true,
-        },
+        }
       }),
     ],
   ],
