@@ -67,3 +67,41 @@
   transform: scale(1.1); /* Slightly enlarge on hover */
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8); /* Stronger shadow on hover */
 }
+
+
+video {
+  clear: both;
+  display: block;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+}
+
+section {
+  opacity: 1;
+  transition: opacity 500ms ease-in-out;
+}
+
+
+.faceCam-view {
+  position: relative;
+  width: 48%;
+  margin: 2% 1%;
+  cursor: pointer;
+}
+
+.faceCam-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.faceCam-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+

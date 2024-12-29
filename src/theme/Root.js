@@ -65,8 +65,8 @@ const Root = ({ children }) => {
         <button
           className="face-login-button"
           onClick={() => {
-            setButtonClicked(true); // Hide the button on click
-            history.push('/liveness-detect'); // Navigate to liveness-detect page
+            // setButtonClicked(true); // Hide the button on click
+            history.push('/face'); // Navigate to liveness-detect page
           }}
         >
           &#x1F4F7; Face Login

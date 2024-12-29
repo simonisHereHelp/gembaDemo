@@ -6,6 +6,8 @@ sidebar_label: -choice of adapters
 
 # Microscopic Precision
 
+![Kiosk](./isHereKV.png)
+
 In medical device manufacturing, precision matters. With **Microscopic Precision**, our kiosk platform empowers clients to inspect critical components at the most granular level. This feature ensures that no flaw goes unnoticed, safeguarding the integrity and reliability of your devices.
 
 ## Adaptive Design
@@ -17,6 +19,5 @@ In medical device manufacturing, precision matters. With **Microscopic Precision
 | **1X**        | C-Mount      | Retains the original magnification of the microscope.         | Best for zooming into fine details like individual solder joints or cracks.|
 
 ![C-Mount Adapters](./c-mount-adapters.png)
-![Kiosk](./isHereKV.png)
 
 With **Microscopic Precision**, you can see accuracy in its purest form.
