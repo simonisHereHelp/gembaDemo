@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useContext, useState } from 'react';
 import { GlobalPhotoContext } from '../theme/Root';
 import Layout from '@theme/Layout'; // Import Docusaurus Layout component
-
+import { useHistory, useLocation } from 'react-router-dom';
 
 const LivenessDetect = () => {
   const { setLiveDetected } = useContext(GlobalPhotoContext);
   const videoRef = useRef(null);
   const [ovalDimensions, setOvalDimensions] = useState({ cx: 0, cy: 0, rx: 0, ry: 0 });
+  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const getCameraStream = async () => {
@@ -92,6 +94,8 @@ const LivenessDetect = () => {
       setLiveDetected(true);
       console.log('yet to update')
     }
+    history.go(-1);
+
   };
 
   return (

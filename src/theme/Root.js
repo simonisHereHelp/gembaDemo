@@ -17,6 +17,8 @@ const Root = ({ children }) => {
   const [isToggled, setIsToggled] = useState(false); // Toggled state for view
   const [chapterId, setChapterId] = useState(null); 
   const [LiveDetected, setLiveDetected] = useState(false); // New global state for liveness
+  const [buttonClicked, setButtonClicked] = useState(false); // Local state for hiding button after click
+
 
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
@@ -54,17 +56,22 @@ const Root = ({ children }) => {
       initialized, setInitialized, 
       isToggled, setIsToggled,
       chapterId, setChapterId,
-      LiveDetected, setLiveDetected
+      LiveDetected, setLiveDetected,
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
       )}
-
-      <button className="face-login-button"
-        onClick={() => history.push('/liveness-detect')}>
-        &#x1F4F7; Face Login
-      </button>
-
+      {!LiveDetected && !buttonClicked && (
+        <button
+          className="face-login-button"
+          onClick={() => {
+            setButtonClicked(true); // Hide the button on click
+            history.push('/liveness-detect'); // Navigate to liveness-detect page
+          }}
+        >
+          &#x1F4F7; Face Login
+        </button>
+      )}
       {children}
     </GlobalPhotoContext.Provider>
   );
