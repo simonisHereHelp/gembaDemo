@@ -9,10 +9,10 @@ import { useHistory } from "react-router-dom";
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
-  const [counter, setCounter] = useState(0);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const history = useHistory();
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     const initializeFaceDetector = async () => {
@@ -34,6 +34,11 @@ const FaceDetection = () => {
     };
 
     initializeFaceDetector();
+
+    const loginButton = document.getElementById("face-login-button");
+    if (loginButton) {
+      loginButton.textContent = "Pending...";
+    }
   }, [runningMode]);
 
   useEffect(() => {
@@ -44,15 +49,7 @@ const FaceDetection = () => {
 
   const enableCam = async () => {
     const video = videoRef.current;
-
-    if (!video) {
-      console.error("Video element is not available.");
-      return;
-    }
-
-    const constraints = {
-      video: true,
-    };
+    const constraints = { video: true };
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -70,18 +67,12 @@ const FaceDetection = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    if (!video || !ctx) {
-      console.error("Video or canvas element is not available.");
-      return;
-    }
-
     if (runningMode === "IMAGE") {
       setRunningMode("VIDEO");
       await faceDetector.setOptions({ runningMode: "VIDEO" });
     }
 
     const startTimeMs = performance.now();
-
     try {
       const detections = faceDetector.detectForVideo(video, startTimeMs).detections;
 
@@ -93,25 +84,24 @@ const FaceDetection = () => {
 
         if (confidence > 0.6) {
           setCounter((prev) => prev + 1);
-          ctx.font = "30px Arial";
+          ctx.font = "20px Arial";
           ctx.fillStyle = "green";
-          ctx.fillText("✅ Checked", 50, 50);
+          ctx.fillText("✅", 50, 50);
         } else {
           setCounter(0);
         }
-
-        if (counter >= 3) {
-          const button = document.querySelector(".face-login-button");
-          if (button) {
-            button.textContent = "Login Success!";
-            button.style.animation = "none";
-          }
-          setTimeout(() => {
-            history.go(-1);
-          }, 1000);
-        }
       } else {
         setCounter(0);
+      }
+
+      if (counter >= 3) {
+        const loginButton = document.querySelector(".face-login-button");
+        if (loginButton) {
+          loginButton.textContent = "Login Success!";
+        }
+        setTimeout(() => {
+          history.go(-1);
+        }, 2000); // Redirect after 2 seconds
       }
     } catch (error) {
       console.error("Error during prediction:", error);
@@ -119,13 +109,6 @@ const FaceDetection = () => {
 
     requestAnimationFrame(predictWebcam);
   };
-
-  useEffect(() => {
-    const button = document.querySelector(".face-login-button");
-    if (button) {
-      button.textContent = "Pending...";
-    }
-  }, []);
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
