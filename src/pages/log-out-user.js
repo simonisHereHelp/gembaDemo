@@ -35,8 +35,7 @@ const TransitionPage = () => {
             height: '80px',
           }}
           />
-            <h2>log out user </h2>
-            <h2> User ID: {loginName} </h2>
+            <h2>log out user...</h2>
             <p>Please wait while we log you out and redirect you.</p>
           </section>
     </Layout>

@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import {
-  FaceDetector,
-  FilesetResolver,
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+import { FaceDetector, FilesetResolver } from '@mediapipe/tasks-vision';
 import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
-import clickSound from '@site/static/img/click.mp3'
 import loginIcon from '@site/static/img/log-in.png'
 
 const FaceDetection = () => {
@@ -16,7 +12,6 @@ const FaceDetection = () => {
   const videoRef = useRef(null);
   const history = useHistory();
   const { loginName, setLoginName, loginReturnLoc} = useContext(GlobalPhotoContext); // Access the global state
-  const clickAudio = useRef(new Audio(clickSound));
   const threshold = 0.7;
   const [detectLength, setDetectLength] = useState(0)
 
@@ -123,8 +118,6 @@ const FaceDetection = () => {
         } else {
           history.push("/");
         }
-        clickAudio.current.currentTime = 0;
-        clickAudio.current.play();
       }, 500); // Small delay to allow UI updates
     }
   }, [counter, detectLength]);
