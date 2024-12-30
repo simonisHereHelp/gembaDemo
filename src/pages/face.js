@@ -4,17 +4,15 @@ import {
   FilesetResolver,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 import Layout from "@theme/Layout";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
   const [counter, setCounter] = useState(0);
   const [isInitializing, setIsInitializing] = useState(true); // Track initialization
-  const [terminated, setTerminated] = useState(false);
   const videoRef = useRef(null);
   const history = useHistory();
-  const location = useLocation();
 
   // Initialize the face detector
   useEffect(() => {
@@ -74,7 +72,7 @@ const FaceDetection = () => {
   const predictWebcam = async () => {
     const video = videoRef.current;
 
-    if (!video || terminated) {
+    if (!video) {
       return; // Exit if the component is terminated
     }
 
@@ -114,7 +112,7 @@ const FaceDetection = () => {
   useEffect(() => {
     const button = document.querySelector(".face-login-button");
 
-    if (counter >= 3 && !terminated) {
+    if (counter >= 3) {
       if (button) {
         button.textContent = "Login Success!";
         button.style.animation = "none"; // Stop pending animation
@@ -123,19 +121,16 @@ const FaceDetection = () => {
     } else if (counter === 0 && button) {
       button.textContent = "Pending...";
     }
-  }, [counter, history, terminated]);
+  }, [counter, history]);
 
-  if (terminated) {
-    return null; // Render nothing when terminated
-  }
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
-      {isInitializing ? (
-        <h2>Initializing Webcam...</h2>
-      ) : (<h2>Log-In Detection</h2>)}
         <>
           <section className="faceCam-view">
+          {isInitializing ? (
+              <h2>Initializing Webcam...</h2>
+            ) : (<h2>Log-In Detection</h2>)}
             <video
               id="webcam"
               autoPlay
