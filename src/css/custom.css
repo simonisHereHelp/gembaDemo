@@ -118,22 +118,22 @@ section {
   left: 0; /* Align with the left edge */
   bottom: 0; /* Stick to the bottom */
   width: 15vw; /* Match the width of the sidebar */
-  background-color: #f5f5f5; /* Sidebar background color */
+  background-color: #cadbf4; /* Sidebar background color */
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for separation */
   border-top: 1px solid #ddd; /* Optional top border */
-  padding: 10px 0; /* Padding for spacing */
+  padding: 10px 20px; /* Padding for spacing */
   display: flex;
   flex-direction: column; /* Stack items vertically */
   align-items: center; /* Center align items */
   z-index: 1000; /* Ensure it appears above content */
-  border-radius: 20px
+  border-radius: 20px;
+  font-size: 1.2rem;
 }
 .bottom-nav-item {
   color: #007bff; /* Link color */
   text-decoration: none;
-  padding: 5px 10px; /* Spacing around links */
   margin: 2px 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
   text-align: center;
   width: 100%; /* Full-width links */
   box-sizing: border-box; /* Include padding in width calculation */

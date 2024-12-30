@@ -60,12 +60,12 @@ const Root = ({ children }) => {
       )}
       {children}
       <div className="bottom-nav-menu">
-        <p style={{ fontWeight: 'bold' }}>User: {loginName || "Guest"}</p>
+        <p><strong>{loginName ? `User: ${loginName}` : "No User Logged In"}</strong></p>
         <a
           href="/face"
           className="bottom-nav-item"
         >
-          {loginName ? "Log Out" : "Log In"}
+          {loginName ? "Log Out from App" : "Log In as a User"}
         </a>
       </div>
 

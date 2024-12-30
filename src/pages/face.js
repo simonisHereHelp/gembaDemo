@@ -6,7 +6,7 @@ import {
 import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
-
+import swishSound from '@site/static/img/swoosh.mp3'
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
@@ -14,9 +14,13 @@ const FaceDetection = () => {
   const [isInitializing, setIsInitializing] = useState(true); // Track initialization
   const videoRef = useRef(null);
   const history = useHistory();
-  const { setLoginName } = useContext(GlobalPhotoContext); // Access the global state
-
-
+  const { loginName,setLoginName } = useContext(GlobalPhotoContext); // Access the global state
+  const swishAudio = useRef(new Audio(swishSound));
+  useEffect(() => {
+    // Play swish audio on mount
+    swishAudio.current.currentTime = 0;
+    swishAudio.current.play();
+  }, []); // Empty dependency array ensures this runs only once
   // Initialize the face detector
   useEffect(() => {
     const initializeFaceDetector = async () => {
@@ -113,7 +117,7 @@ const FaceDetection = () => {
 
   useEffect(() => {
     if (counter >= 3) {
-      const randomId = Math.floor(100 + Math.random() * 900); // Generate random 3-digit ID
+      const randomId = loginName || `User ${Math.floor(100 + Math.random() * 900)}`; // Use existing loginName or generate a new one
       setLoginName(`User ${randomId}`);
       setTimeout(() => {
         if (history.length > 1) {
@@ -121,6 +125,8 @@ const FaceDetection = () => {
         } else {
           history.push("/");
         }
+        swishAudio.current.currentTime = 0;
+        swishAudio.current.play();
       }, 500); // Small delay to allow UI updates
     }
   }, [counter, history, setLoginName]);
