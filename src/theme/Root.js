@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
-import BottomNavMenu from '../components/BottomNavMenu'; // Import BottomNavMenu component
+import BottomNavMenu from '../components/BtmNavMenu'; // Import BottomNavMenu component
 
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
@@ -18,6 +18,7 @@ const Root = ({ children }) => {
   const [isToggled, setIsToggled] = useState(false); // Toggled state for view
   const [chapterId, setChapterId] = useState(null); 
   const [loginName, setLoginName] = useState(null); // Global login state
+  const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
@@ -55,6 +56,7 @@ const Root = ({ children }) => {
       isToggled, setIsToggled,
       chapterId, setChapterId,
       loginName, setLoginName,
+      loginReturnLoc, setLoginReturnLoc,
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 

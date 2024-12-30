@@ -6,7 +6,6 @@ import {
 import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
-import swishSound from '@site/static/img/swoosh.mp3'
 import clickSound from '@site/static/img/click.mp3'
 import loginIcon from '@site/static/img/log-in.png'
 
@@ -16,18 +15,11 @@ const FaceDetection = () => {
   const [counter, setCounter] = useState(0);
   const videoRef = useRef(null);
   const history = useHistory();
-  const { loginName,setLoginName } = useContext(GlobalPhotoContext); // Access the global state
-  const swishAudio = useRef(new Audio(swishSound));
+  const { loginName, setLoginName, loginReturnLoc} = useContext(GlobalPhotoContext); // Access the global state
   const clickAudio = useRef(new Audio(clickSound));
   const threshold = 0.7;
   const [detectLength, setDetectLength] = useState(0)
 
-  useEffect(() => {
-    // Play swish audio on mount
-    swishAudio.current.currentTime = 0;
-    swishAudio.current.play();
-  }, []); // Empty dependency array ensures this runs only once
-  // Initialize the face detector
   useEffect(() => {
     const initializeFaceDetector = async () => {
       try {
@@ -126,8 +118,8 @@ const FaceDetection = () => {
       setLoginName(detectLength > 5 ? "not found!" : randomId);
   
       setTimeout(() => {
-        if (history.length > 1) {
-          history.go(-1);
+        if (loginReturnLoc) {
+          history.push(loginReturnLoc);
         } else {
           history.push("/");
         }

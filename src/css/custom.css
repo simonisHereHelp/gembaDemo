@@ -152,3 +152,11 @@ section {
 #__docusaurus {
   padding-bottom: 40vh; /* Adjust based on the height of your bottom-nav-menu */
 }
+
+.bottom-nav-menu {
+  transition: transform 0.5s ease-in-out;
+}
+
+.bottom-nav-menu.flip {
+  transform: rotateY(180deg);
+}
