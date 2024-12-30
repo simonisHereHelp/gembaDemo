@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import {
   FaceDetector,
   FilesetResolver,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
+import { GlobalPhotoContext } from "../theme/Root";
 
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
@@ -13,6 +14,8 @@ const FaceDetection = () => {
   const [isInitializing, setIsInitializing] = useState(true); // Track initialization
   const videoRef = useRef(null);
   const history = useHistory();
+  const { setLoginName } = useContext(GlobalPhotoContext); // Access the global state
+
 
   // Initialize the face detector
   useEffect(() => {
@@ -108,21 +111,20 @@ const FaceDetection = () => {
     requestAnimationFrame(predictWebcam);
   };
 
-  // React to counter changes
   useEffect(() => {
-    const button = document.querySelector(".face-login-button");
-
     if (counter >= 3) {
-      if (button) {
-        button.textContent = "Login Success!";
-        button.style.animation = "none"; // Stop pending animation
-      }
-      history.go(-1); // Navigate back to the previous page
-    } else if (counter === 0 && button) {
-      button.textContent = "Pending...";
+      const randomId = Math.floor(100 + Math.random() * 900); // Generate random 3-digit ID
+      setLoginName(`User ${randomId}`);
+      setTimeout(() => {
+        if (history.length > 1) {
+          history.go(-1);
+        } else {
+          history.push("/");
+        }
+      }, 500); // Small delay to allow UI updates
     }
-  }, [counter, history]);
-
+  }, [counter, history, setLoginName]);
+ 
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">

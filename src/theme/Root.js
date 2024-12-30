@@ -16,10 +16,7 @@ const Root = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
   const [isToggled, setIsToggled] = useState(false); // Toggled state for view
   const [chapterId, setChapterId] = useState(null); 
-  const [LiveDetected, setLiveDetected] = useState(false); // New global state for liveness
-  const [buttonClicked, setButtonClicked] = useState(false); // Local state for hiding button after click
-
-
+  const [loginName, setLoginName] = useState(null); // Global login state
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
@@ -56,23 +53,22 @@ const Root = ({ children }) => {
       initialized, setInitialized, 
       isToggled, setIsToggled,
       chapterId, setChapterId,
-      LiveDetected, setLiveDetected,
+      loginName, setLoginName,
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
       )}
-      {!LiveDetected && !buttonClicked && (
-        <button
-          className="face-login-button"
-          onClick={() => {
-            // setButtonClicked(true); // Hide the button on click
-            history.push('/face'); // Navigate to liveness-detect page
-          }}
-        >
-          &#x1F4F7; Face Login
-        </button>
-      )}
       {children}
+      <div className="bottom-nav-menu">
+        <p style={{ fontWeight: 'bold' }}>User: {loginName || "Guest"}</p>
+        <a
+          href="/face"
+          className="bottom-nav-item"
+        >
+          {loginName ? "Log Out" : "Log In"}
+        </a>
+      </div>
+
     </GlobalPhotoContext.Provider>
   );
 };
