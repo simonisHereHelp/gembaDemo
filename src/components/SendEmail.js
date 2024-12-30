@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import mailIcon from '@site/static/img/ishere-logo.png';
 import { GlobalPhotoContext } from '@site/src/theme/Root';
 import { findChapterTitle } from './findTimeStamp';
@@ -10,8 +10,14 @@ const SendEmail = ({ title }) => {
   const [userName, setUserName] = useState('');
   const [timestamp, setTimestamp] = useState('');
 
-  const { savedPhotos } = useContext(GlobalPhotoContext);
+  const { savedPhotos, loginName } = useContext(GlobalPhotoContext);
   const totalPhotosToUpload = savedPhotos.filter((photo) => photo).length;
+  
+  useEffect(() => {
+    if (loginName) {
+      setUserName(loginName); // Prefill userName with loginName
+    }
+  }, [loginName]);
 
   const recipients = ["simon@ishere.help", "presenter.simon@gmail.com"];
   const getRecipientName = (email) => email.split('@')[0];
@@ -136,7 +142,6 @@ ${savedPhotos
         type="text"
         value={userName}
         onChange={(e) => setUserName(e.target.value)}
-        placeholder="your name here"
         style={{
           padding: '10px',
           margin: '0 10px',

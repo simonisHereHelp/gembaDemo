@@ -7,15 +7,21 @@ import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
 import swishSound from '@site/static/img/swoosh.mp3'
+import clickSound from '@site/static/img/click.mp3'
+import loginIcon from '@site/static/img/log-in.png'
+
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
   const [counter, setCounter] = useState(0);
-  const [isInitializing, setIsInitializing] = useState(true); // Track initialization
   const videoRef = useRef(null);
   const history = useHistory();
   const { loginName,setLoginName } = useContext(GlobalPhotoContext); // Access the global state
   const swishAudio = useRef(new Audio(swishSound));
+  const clickAudio = useRef(new Audio(clickSound));
+  const threshold = 0.7;
+  const [detectLength, setDetectLength] = useState(0)
+
   useEffect(() => {
     // Play swish audio on mount
     swishAudio.current.currentTime = 0;
@@ -93,14 +99,13 @@ const FaceDetection = () => {
     try {
       const detections = faceDetector.detectForVideo(video, startTimeMs).detections;
 
-      // Mark initialization as complete when predictions start
-      setIsInitializing(false);
+      setDetectLength(detections.length); // Update detectLength state
 
       if (detections.length > 0) {
         const detection = detections[0];
         const confidence = detection.categories[0].score;
 
-        if (confidence > 0.7) {
+        if (confidence > threshold) {
           setCounter((prev) => prev + 1);
         } else {
           setCounter(0);
@@ -116,29 +121,40 @@ const FaceDetection = () => {
   };
 
   useEffect(() => {
-    if (counter >= 3) {
-      const randomId = loginName || `User ${Math.floor(100 + Math.random() * 900)}`; // Use existing loginName or generate a new one
-      setLoginName(`User ${randomId}`);
+    if (counter >= 3 || detectLength > 5) {
+      const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
+      setLoginName(detectLength > 5 ? "not found!" : randomId);
+  
       setTimeout(() => {
         if (history.length > 1) {
           history.go(-1);
         } else {
           history.push("/");
         }
-        swishAudio.current.currentTime = 0;
-        swishAudio.current.play();
+        clickAudio.current.currentTime = 0;
+        clickAudio.current.play();
       }, 500); // Small delay to allow UI updates
     }
-  }, [counter, history, setLoginName]);
+  }, [counter, detectLength]);
+  
  
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
         <>
           <section className="faceCam-view">
-          {isInitializing ? (
-              <h2>Initializing Webcam...</h2>
-            ) : (<h2>Log-In Detection</h2>)}
+          <img
+          src={loginIcon}
+          alt="Login Icon"
+          style={{
+            display: 'block',
+            margin: '10px auto',
+            width: '80px',
+            height: '80px',
+          }}
+          />
+            <h2>Initializing Webcam...</h2>
+            <p>sequence #{detectLength}...</p> 
             <video
               id="webcam"
               autoPlay

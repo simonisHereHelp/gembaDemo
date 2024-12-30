@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
+import BottomNavMenu from '../components/BottomNavMenu'; // Import BottomNavMenu component
 
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
@@ -59,16 +60,7 @@ const Root = ({ children }) => {
         <VideoChapters/> 
       )}
       {children}
-      <div className="bottom-nav-menu">
-        <p><strong>{loginName ? `User: ${loginName}` : "No User Logged In"}</strong></p>
-        <a
-          href="/face"
-          className="bottom-nav-item"
-        >
-          {loginName ? "Log Out from App" : "Log In as a User"}
-        </a>
-      </div>
-
+      <BottomNavMenu />
     </GlobalPhotoContext.Provider>
   );
 };
