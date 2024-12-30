@@ -10,10 +10,12 @@ const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
   const [counter, setCounter] = useState(0);
+  const [isInitializing, setIsInitializing] = useState(true); // Track initialization
+  const [terminated, setTerminated] = useState(false);
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
   const history = useHistory();
 
+  // Initialize the face detector
   useEffect(() => {
     const initializeFaceDetector = async () => {
       try {
@@ -36,12 +38,14 @@ const FaceDetection = () => {
     initializeFaceDetector();
   }, [runningMode]);
 
+  // Automatically enable the webcam when the detector is ready
   useEffect(() => {
     if (faceDetector) {
       enableCam();
     }
   }, [faceDetector]);
 
+  // Enable webcam feed and start predictions
   const enableCam = async () => {
     const video = videoRef.current;
 
@@ -65,14 +69,12 @@ const FaceDetection = () => {
     }
   };
 
+  // Predict webcam feed
   const predictWebcam = async () => {
     const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
 
-    if (!video || !ctx) {
-      console.error("Video or canvas element is not available.");
-      return;
+    if (!video || terminated) {
+      return; // Exit if the component is terminated
     }
 
     if (runningMode === "IMAGE") {
@@ -85,30 +87,17 @@ const FaceDetection = () => {
     try {
       const detections = faceDetector.detectForVideo(video, startTimeMs).detections;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Mark initialization as complete when predictions start
+      setIsInitializing(false);
 
       if (detections.length > 0) {
         const detection = detections[0];
         const confidence = detection.categories[0].score;
 
-        if (confidence > 0.6) {
+        if (confidence > 0.7) {
           setCounter((prev) => prev + 1);
-          ctx.font = "30px Arial";
-          ctx.fillStyle = "green";
-          ctx.fillText("✅ Checked", 50, 50);
         } else {
           setCounter(0);
-        }
-
-        if (counter >= 3) {
-          const button = document.querySelector(".face-login-button");
-          if (button) {
-            button.textContent = "Login Success!";
-            button.style.animation = "none";
-          }
-          setTimeout(() => {
-            history.go(-1);
-          }, 1000);
         }
       } else {
         setCounter(0);
@@ -120,28 +109,45 @@ const FaceDetection = () => {
     requestAnimationFrame(predictWebcam);
   };
 
+  // React to counter changes
   useEffect(() => {
     const button = document.querySelector(".face-login-button");
-    if (button) {
+
+    if (counter >= 3 && !terminated) {
+      if (button) {
+        button.textContent = "Login Success!";
+        button.style.animation = "none"; // Stop pending animation
+      }
+      setTimeout(() => {
+        setTerminated(true); // Mark the component as terminated
+        history.go(-1); // Navigate back to the previous page
+      }, 4000);
+    } else if (counter === 0 && button) {
       button.textContent = "Pending...";
     }
-  }, []);
+  }, [counter, history, terminated]);
+
+  if (terminated) {
+    return null; // Render nothing when terminated
+  }
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
-      <section className="faceCam-view">
-        <video
-          id="webcam"
-          autoPlay
-          playsInline
-          ref={videoRef}
-          className="faceCam-video"
-        ></video>
-        <canvas
-          ref={canvasRef}
-          className="faceCam-canvas"
-        ></canvas>
-      </section>
+      {isInitializing ? (
+        <h2>Initializing Webcam...</h2>
+      ) : (<h2>Log-In Detection</h2>)}
+        <>
+          <section className="faceCam-view">
+            <video
+              id="webcam"
+              autoPlay
+              playsInline
+              ref={videoRef}
+              className="faceCam-video"
+            ></video>
+          </section>
+        </>
+
     </Layout>
   );
 };
