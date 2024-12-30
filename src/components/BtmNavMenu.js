@@ -35,7 +35,8 @@ const BottomNavMenu = () => {
     triggerMenuAnimation(true);
     if (loginName) {
       // Logout logic
-      history.push('/log-out-user');
+      const someStartTime = 105; // seconds into the video
+      history.push('/log-out-user', { videoStartime: someStartTime });
       setLoginName(null);
     } else {
       // Navigate to FaceDetection for login
