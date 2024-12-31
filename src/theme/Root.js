@@ -51,7 +51,8 @@ const Root = ({ children }) => {
   }, [location.pathname, isVideoMode]);
 
   const handleIconClick = () => {
-    // Mockup function: no operations
+    setLoginReturnLoc(location.pathname);
+    history.push('/face');
   };
 
   return (
