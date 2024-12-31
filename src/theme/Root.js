@@ -82,7 +82,7 @@ const Root = ({ children }) => {
            </div>
            <div
              className="bottom-nav-item"
-             onClick={faceLoginClick}
+             //onClick={faceLoginClick}
              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
            >
              <img
