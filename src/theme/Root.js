@@ -50,18 +50,6 @@ const Root = ({ children }) => {
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);
 
-  const faceLoginClick = () => {
-    swishAudio.current.currentTime = 0;
-    swishAudio.current.play();
-    setLoginReturnLoc(location.pathname);
-    if (loginName) {
-      history.push('/log-out-user');
-      setLoginName(null);
-    } else {
-      // Navigate to FaceDetection for login
-      history.push('/face');
-    }
-  };
 
   return (
     <GlobalPhotoContext.Provider 
@@ -82,7 +70,6 @@ const Root = ({ children }) => {
            </div>
            <div
              className="bottom-nav-item"
-             onClick={faceLoginClick}
              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
            >
              <img
