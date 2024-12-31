@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
-import BtmNavMenu from '../components/BtmNavMenu';
+import BottomNav from '../components/BottomNav';
 
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
@@ -62,7 +62,7 @@ const Root = ({ children }) => {
         <VideoChapters/> 
       )}
       {children}
-     <BtmNavMenu />
+     <BottomNav />
     </GlobalPhotoContext.Provider>
   );
 };
