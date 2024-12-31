@@ -3,7 +3,8 @@ import { FaceDetector, FilesetResolver } from '@mediapipe/tasks-vision';
 import Layout from "@theme/Layout";
 import { useHistory} from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
-import loginIcon from '@site/static/img/log-in.png'
+import loginIcon from '@site/static/img/log-in.png';
+import badge from '@site/static/img/badge.png';
 
 const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
@@ -127,16 +128,12 @@ const FaceDetection = () => {
         <>
           <section className="faceCam-view">
           <img
-          src={loginIcon}
-          alt="Login Icon"
-          style={{
-            display: 'block',
-            margin: '10px auto',
-            width: '80px',
-            height: '80px',
-          }}
+            src={loginIcon}
+            alt="Login Icon"
+            className="login-icon"
           />
-            <h2>Initializing Webcam...</h2>
+          <h2>Initializing Webcam...</h2>
+          <div className="video-container">
             <video
               id="webcam"
               autoPlay
@@ -144,6 +141,12 @@ const FaceDetection = () => {
               ref={videoRef}
               className="faceCam-video"
             ></video>
+            <img
+              src={badge}
+              alt="Badge"
+              className="flicker-badge"
+            />
+          </div>
           </section>
         </>
 

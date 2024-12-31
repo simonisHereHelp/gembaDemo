@@ -161,3 +161,46 @@ section {
   transform: rotateX(360deg);
   transition: transform 1.5s ease-in; /* Adjust the duration to slow down */
 }
+
+/* Styling for the login icon */
+.login-icon {
+  display: block;
+  margin: 10px auto;
+  width: 80px;
+  height: 80px;
+}
+
+/* Styling for the video container */
+.video-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Styling for the webcam video */
+.faceCam-video {
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+/* Styling for the flicker badge */
+.flicker-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  z-index: 1000;
+  animation: flicker 1.5s infinite;
+}
+
+/* Flicker animation */
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
