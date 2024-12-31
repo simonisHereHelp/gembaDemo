@@ -9,14 +9,12 @@ const VideoChapters = ({ }) => {
     initialized, setInitialized, 
     isToggled, setIsToggled, 
     chapterId, setChapterId,
-    currentTime, setCurrentTime,
-    recallTime
+    recallTime, setRecallTime
   } = useContext(GlobalPhotoContext);
   
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-
-  // Debugging chapterId
+  const [currentTime, setCurrentTime] = useState(null);
 
   // Task 1: Sync savedPhotos with the Docusaurus sidebar when chapterId is valid
   useEffect(() => {
@@ -45,15 +43,26 @@ const VideoChapters = ({ }) => {
       });
     }
   }, [chapterId, savedPhotos]);
-  // Task 2: Find start and end time based on chapterId and pass to VideoCameraControl
+  // Task 2: Find start (or recallTime) and end time based on chapterId and pass to VideoCameraControl
   useEffect(() => {
-    if (chapterId !== null) {
-      const start = findStartTime(chapterId); // Get start time for the chapter
-      const end = findEndTime(chapterId);   // Get end time for the chapter
+    if (chapterId === null) {
+      // Case 1: chapterId is null
+      if (previousLocation?.startsWith('docs/prov')) {
+        setRecallTime(currentTime)
+        console.log(`Saved recallTime for ${previousLocation}: ${currentTime}`);
+      } else {
+        console.log('No action taken as previousLocation is not from docs/prov');
+      }
+    } else {
+      // Case 2: chapterId is not null
+      const start = recallTime?? findStartTime(chapterId); // Use recallTime if available
+      const end = findEndTime(chapterId); // Get the end time for the chapter
+      setRecallTime(null)
       setStartTime(start);
       setEndTime(end);
+      console.log(`Updated startTime: ${start}, endTime: ${end} for chapterId: ${chapterId}`);
     }
-  }, [chapterId]); // Only trigger when chapterId is valid (not null)
+  }, [chapterId, currentTime]);
 
   return (
     <>
@@ -65,7 +74,6 @@ const VideoChapters = ({ }) => {
           startTime={startTime} 
           endTime={endTime}
           setCurrentTime={setCurrentTime} 
-          recallTime = {recallTime}
           savedPhotos={savedPhotos} 
           setSavedPhotos={setSavedPhotos} 
           initialized={initialized}  // Pass global initialized state

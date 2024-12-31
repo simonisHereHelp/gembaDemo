@@ -18,7 +18,6 @@ class VideoCameraControl extends React.Component {
       initialized: this.props.initialized,  // Indicates if the first interaction has happened
       isToggled: this.props.isToggled,  // Control the toggle between sizes
       showPlayPauseButton: true,  // Control the visibility of the play/pause button
-      recallTime: this.props.recallTime || 0
     };
     this.playUntil = this.playUntil.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -53,6 +52,10 @@ class VideoCameraControl extends React.Component {
   }
 
   playUntil(startTime, endTime) {
+    if (isNaN(startTime) || isNaN(endTime)) {
+      console.error("Invalid startTime or endTime provided:", startTime, endTime);
+      return;
+    }
     if (this.p) { // Ensure the player ref is available
       this.p.seekTo(startTime);  // Seek to the start time
       this.setState({ playing: true });  // Start playback
@@ -97,41 +100,40 @@ class VideoCameraControl extends React.Component {
   
   // Automatically play the next segment when the component updates (no user interaction needed)
   componentDidUpdate(prevProps) {
-    const { startTime, endTime, chapterId, recallTime } = this.props;
-
-    if (this.state.initialized && 
-        (prevProps.startTime !== startTime || prevProps.endTime !== endTime || prevProps.chapterId !== chapterId)) {
-    
-        const effectiveStartTime = recallTime ?? startTime;
-
-      // Autoplay the next segment if props have changed
-      if (effectiveStartTime !== undefined && endTime !== undefined) {
-        this.playUntil(parseFloat(effectiveStartTime), parseFloat(endTime));
+    const { startTime, endTime, chapterId } = this.props;
+  
+    if (this.state.initialized &&
+        (prevProps.startTime !== startTime || 
+         prevProps.endTime !== endTime || 
+         prevProps.chapterId !== chapterId)) {
+      this.playUntil(parseFloat(startTime), parseFloat(endTime));
+  
+      if (!this.state.showPlayPauseButton) {
         this.setState({
-          showPlayPauseButton: true,  // Reset the play/pause button visibility for new chapter
+          showPlayPauseButton: true,
         });
       }
-
+  
+      // Only start webcam if it hasn't been started yet
+      if (!this.webcamRef.current || !this.webcamRef.current.srcObject) {
         this.startWebcam();
+      }
     }
   }
-
-  // Function to play the video from startTime to endTime
-
+  
 
   // Stop the video when the progress reaches the endTime
   handleProgress(state) {
     const currentTime = state.playedSeconds; // Get the current video time
-    this.setState({ currentTime }); 
+    this.setState({ currentTime });
     if (this.props.setCurrentTime) {
       this.props.setCurrentTime(currentTime);
-    }
+    };
     if (this.props.endTime && state.playedSeconds >= this.props.endTime) {
       this.setState({ playing: false,
         showPlayPauseButton: false,  // Hide the play/pause button when video stops
        });
       console.log(`Video stopped at ${this.props.endTime} seconds`);
-
     }
   }
 
