@@ -1,10 +1,10 @@
-import React, { useState, useEffect, createContext, useRef } from 'react';
+import React, { useState, useEffect, createContext, useRef } from 'react'; 
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
 import loginIcon from '@site/static/img/log-in.png';
 import logoutIcon from '@site/static/img/log-out.png';
-import swishSound from '@site/static/img/swoosh.mp3';
+
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
 
@@ -20,11 +20,19 @@ const Root = ({ children }) => {
   const [chapterId, setChapterId] = useState(null); 
   const [loginName, setLoginName] = useState(null); // Global login state
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
-  const swishAudio = useRef(new Audio(swishSound));
+  const swishAudio = useRef(null);
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
-  const isNewDoc = previousLocation !== location.pathname;
+
+  // Lazy initialization of audio object to avoid SSR issues
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('@site/static/img/swoosh.mp3').then(({ default: audioSrc }) => {
+        swishAudio.current = new Audio(audioSrc);
+      });
+    }
+  }, []);
 
   // Effect to manage chapterId and navigation to the correct chapter when returning to the video section
   useEffect(() => {
@@ -51,8 +59,12 @@ const Root = ({ children }) => {
   }, [location.pathname, isVideoMode]);
 
   const handleIconClick = () => {
-    swishAudio.current.currentTime = 0; // Reset sound
-    swishAudio.current.play(); // Play sound
+    if (swishAudio.current) {
+      swishAudio.current.currentTime = 0; // Reset sound
+      swishAudio.current.play(); // Play sound
+    } else {
+      console.warn('Audio not initialized');
+    }
     setLoginReturnLoc(location.pathname);
     history.push('/face');
   };
