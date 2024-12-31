@@ -62,7 +62,7 @@ const Root = ({ children }) => {
         <VideoChapters/> 
       )}
       {children}
-      <BtmNavMenu />
+      {/* <BtmNavMenu /> */}
     </GlobalPhotoContext.Provider>
   );
 };
