@@ -18,7 +18,7 @@ const TransitionPage = () => {
       } else {
         history.push('/');
       }
-    }, 2500);
+    }, 500);
 
     return () => clearTimeout(timer); // Cleanup the timeout
   }, [loginName, loginReturnLoc]);
