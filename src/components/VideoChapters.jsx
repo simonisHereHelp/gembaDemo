@@ -8,7 +8,9 @@ const VideoChapters = ({ }) => {
     savedPhotos, setSavedPhotos, 
     initialized, setInitialized, 
     isToggled, setIsToggled, 
-    chapterId, setChapterId // Access chapterId and setChapterId from context
+    chapterId, setChapterId,
+    currentTime, setCurrentTime,
+    recallTime
   } = useContext(GlobalPhotoContext);
   
   const [startTime, setStartTime] = useState(null);
@@ -61,7 +63,9 @@ const VideoChapters = ({ }) => {
           chapterId={chapterId} 
           setChapterId={setChapterId} // Pass setChapterId to VideoCameraControl
           startTime={startTime} 
-          endTime={endTime} 
+          endTime={endTime}
+          setCurrentTime={setCurrentTime} 
+          recallTime = {recallTime}
           savedPhotos={savedPhotos} 
           setSavedPhotos={setSavedPhotos} 
           initialized={initialized}  // Pass global initialized state

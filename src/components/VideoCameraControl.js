@@ -18,8 +18,7 @@ class VideoCameraControl extends React.Component {
       initialized: this.props.initialized,  // Indicates if the first interaction has happened
       isToggled: this.props.isToggled,  // Control the toggle between sizes
       showPlayPauseButton: true,  // Control the visibility of the play/pause button
-      currentTime: 0,  // Track current video time
-
+      recallTime: this.props.recallTime || 0
     };
     this.playUntil = this.playUntil.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -98,14 +97,16 @@ class VideoCameraControl extends React.Component {
   
   // Automatically play the next segment when the component updates (no user interaction needed)
   componentDidUpdate(prevProps) {
-    const { startTime, endTime, chapterId } = this.props;
-    
+    const { startTime, endTime, chapterId, recallTime } = this.props;
+
     if (this.state.initialized && 
         (prevProps.startTime !== startTime || prevProps.endTime !== endTime || prevProps.chapterId !== chapterId)) {
+    
+        const effectiveStartTime = recallTime ?? startTime;
 
       // Autoplay the next segment if props have changed
-      if (startTime !== undefined && endTime !== undefined) {
-        this.playUntil(parseFloat(startTime), parseFloat(endTime));
+      if (effectiveStartTime !== undefined && endTime !== undefined) {
+        this.playUntil(parseFloat(effectiveStartTime), parseFloat(endTime));
         this.setState({
           showPlayPauseButton: true,  // Reset the play/pause button visibility for new chapter
         });
@@ -120,7 +121,11 @@ class VideoCameraControl extends React.Component {
 
   // Stop the video when the progress reaches the endTime
   handleProgress(state) {
-    this.setState({ currentTime: state.playedSeconds });  // Set currentTime for display
+    const currentTime = state.playedSeconds; // Get the current video time
+    this.setState({ currentTime }); 
+    if (this.props.setCurrentTime) {
+      this.props.setCurrentTime(currentTime);
+    }
     if (this.props.endTime && state.playedSeconds >= this.props.endTime) {
       this.setState({ playing: false,
         showPlayPauseButton: false,  // Hide the play/pause button when video stops

@@ -22,6 +22,8 @@ const Root = ({ children }) => {
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
   const swishAudio = useRef(null);
   const [isFlipped, setIsFlipped] = useState(false); // State for flip animation
+  const [currentTime, setCurrentTime] = useState(0);
+  const [recallTime, setRecallTime] = useState(0);
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
@@ -47,18 +49,23 @@ const Root = ({ children }) => {
     }
   }, [isVideoMode, initialized, chapterId, previousLocation]);
 
-  // Effect to update chapterId and previousLocation when switching between docs
   useEffect(() => {
     if (isVideoMode) {
       const newChapterId = findChapterId(location); // Find the chapterId using location
       setChapterId(newChapterId);
       console.log("root new ChapterId ", newChapterId);
     }
-
+    // update Video recallTime
+    if (
+      !location.pathname.startsWith('/docs/prov') && 
+      previousLocation?.startsWith('/docs/prov')
+    ) {
+      setRecallTime(currentTime);
+    }
     // Update previousLocation to the current pathname
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);
-
+  
   const handleIconClick = () => {
     if (swishAudio.current) {
       swishAudio.current.currentTime = 0; // Reset sound
@@ -84,6 +91,8 @@ const Root = ({ children }) => {
       chapterId, setChapterId,
       loginName, setLoginName,
       loginReturnLoc, setLoginReturnLoc,
+      currentTime, setCurrentTime,
+      recallTime, setRecallTime
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
