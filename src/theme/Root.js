@@ -2,7 +2,9 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
-import BottomNav from '../components/BottomNav';
+//import BottomNav from '../components/BottomNav';
+import loginIcon from '@site/static/img/log-in.png';
+import logoutIcon from '@site/static/img/log-out.png';
 
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
@@ -62,7 +64,25 @@ const Root = ({ children }) => {
         <VideoChapters/> 
       )}
       {children}
-     <BottomNav />
+      <section>
+         <div className={`bottom-nav-menu`}>
+           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+             <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
+           </div>
+           <div
+             className="bottom-nav-item"
+            // onClick={handleIconClick}
+             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+           >
+             <img
+               src={loginName ? logoutIcon : loginIcon}
+               alt={loginName ? 'Log Out' : 'Log In'}
+               className="nav-icon"
+             />
+             <strong style={{ marginLeft: '10px' }}>{loginName ? 'Log Out User' : 'Log In User'}</strong>
+           </div>
+         </div>
+        </section>
     </GlobalPhotoContext.Provider>
   );
 };
