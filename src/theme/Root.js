@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, createContext, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
 //import BottomNav from '../components/BottomNav';
 import loginIcon from '@site/static/img/log-in.png';
 import logoutIcon from '@site/static/img/log-out.png';
-
+import swishSound from '@site/static/img/swoosh.mp3'
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
 
@@ -21,7 +21,7 @@ const Root = ({ children }) => {
   const [chapterId, setChapterId] = useState(null); 
   const [loginName, setLoginName] = useState(null); // Global login state
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
-
+  const swishAudio = useRef(new Audio(swishSound));
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
   const isNewDoc = previousLocation !== location.pathname;
@@ -50,6 +50,19 @@ const Root = ({ children }) => {
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);
 
+  const faceLoginClick = () => {
+    swishAudio.current.currentTime = 0;
+    swishAudio.current.play();
+    setLoginReturnLoc(location.pathname);
+    if (loginName) {
+      history.push('/log-out-user');
+      setLoginName(null);
+    } else {
+      // Navigate to FaceDetection for login
+      history.push('/face');
+    }
+  };
+
   return (
     <GlobalPhotoContext.Provider 
     value={{ 
@@ -63,15 +76,13 @@ const Root = ({ children }) => {
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
       )}
-      {children}
-      <section>
-         <div className={`bottom-nav-menu`}>
+      {(<div className={`bottom-nav-menu`}>
            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
              <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
            </div>
            <div
              className="bottom-nav-item"
-            // onClick={handleIconClick}
+             onClick={faceLoginClick}
              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
            >
              <img
@@ -82,7 +93,8 @@ const Root = ({ children }) => {
              <strong style={{ marginLeft: '10px' }}>{loginName ? 'Log Out User' : 'Log In User'}</strong>
            </div>
          </div>
-        </section>
+      )}
+      {children}
     </GlobalPhotoContext.Provider>
   );
 };
