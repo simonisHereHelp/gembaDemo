@@ -6,7 +6,7 @@ import logoutIcon from '@site/static/img/log-out.png'
 import swishSound from '@site/static/img/swoosh.mp3'
 
 
-const BottomNavMenu = () => {
+const BtmNavMenu = () => {
   const { loginName, setLoginName, loginReturnLoc, setLoginReturnLoc } = useContext(GlobalPhotoContext);
   const history = useHistory();
   const swishAudio = useRef(new Audio(swishSound));
@@ -64,4 +64,4 @@ const BottomNavMenu = () => {
   );
 };
 
-export default BottomNavMenu;
+export default BtmNavMenu;
