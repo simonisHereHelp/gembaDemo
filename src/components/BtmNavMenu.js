@@ -46,7 +46,7 @@ const BottomNavMenu = () => {
 
   return (
     <div className="bottom-nav-menu">
-        {loginName ? `User: ${loginName}` : "No User Logged In"}
+        {loginName ? `User: ${loginName}` : "User: (not found)"}
         <hr style={{ width: '90%', margin: '10px auto', border: 'none', borderTop: '1px solid #ddd' }} />
       <div
         className="bottom-nav-item"

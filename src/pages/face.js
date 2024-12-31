@@ -9,11 +9,12 @@ const FaceDetection = () => {
   const [faceDetector, setFaceDetector] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
   const [counter, setCounter] = useState(0);
+  const [counterFail, setCounterFail] = useState(0);
   const videoRef = useRef(null);
   const history = useHistory();
   const { loginName, setLoginName, loginReturnLoc} = useContext(GlobalPhotoContext); // Access the global state
   const threshold = 0.7;
-  const [detectLength, setDetectLength] = useState(0)
+
 
   useEffect(() => {
     const initializeFaceDetector = async () => {
@@ -85,8 +86,7 @@ const FaceDetection = () => {
 
     try {
       const detections = faceDetector.detectForVideo(video, startTimeMs).detections;
-
-      setDetectLength(detections.length); // Update detectLength state
+      console.log('detections ',detections)
 
       if (detections.length > 0) {
         const detection = detections[0];
@@ -95,10 +95,10 @@ const FaceDetection = () => {
         if (confidence > threshold) {
           setCounter((prev) => prev + 1);
         } else {
-          setCounter(0);
+          setCounterFail((prev) => prev + 1);;
         }
       } else {
-        setCounter(0);
+        setCounterFail((prev) => prev + 1);;
       }
     } catch (error) {
       console.error("Error during prediction:", error);
@@ -108,10 +108,9 @@ const FaceDetection = () => {
   };
 
   useEffect(() => {
-    if (counter >= 3 || detectLength > 5) {
+    if (counter + counterFail >= 5) {
       const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
-      setLoginName(detectLength > 5 ? "not found!" : randomId);
-  
+      setLoginName(counter > counterFail ? randomId :  null );
       setTimeout(() => {
         if (loginReturnLoc) {
           history.push(loginReturnLoc);
@@ -120,7 +119,7 @@ const FaceDetection = () => {
         }
       }, 500); // Small delay to allow UI updates
     }
-  }, [counter, detectLength]);
+  }, [counter, counterFail]);
   
  
 
@@ -139,7 +138,6 @@ const FaceDetection = () => {
           }}
           />
             <h2>Initializing Webcam...</h2>
-            <p>sequence #{detectLength}...</p> 
             <video
               id="webcam"
               autoPlay
