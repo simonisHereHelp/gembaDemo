@@ -21,6 +21,7 @@ const Root = ({ children }) => {
   const [loginName, setLoginName] = useState(null); // Global login state
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
   const swishAudio = useRef(null);
+  const [isFlipped, setIsFlipped] = useState(false); // State for flip animation
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
@@ -65,8 +66,13 @@ const Root = ({ children }) => {
     } else {
       console.warn('Audio not initialized');
     }
+    setIsFlipped((prev) => !prev);
     setLoginReturnLoc(location.pathname);
-    history.push('/face');
+    if (!loginName) {
+      history.push('/face');
+    } else {
+      history.push('/log-out-user');
+    }
   };
 
   return (
@@ -84,7 +90,7 @@ const Root = ({ children }) => {
       )}
       {children}
       <section>
-         <div className={`bottom-nav-menu`}>
+      <div className={`bottom-nav-menu${isFlipped ? ' flip' : ''}`}>
            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
              <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
            </div>

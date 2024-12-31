@@ -15,7 +15,6 @@ const FaceDetection = () => {
   const { loginName, setLoginName, loginReturnLoc} = useContext(GlobalPhotoContext); // Access the global state
   const threshold = 0.7;
 
-
   useEffect(() => {
     const initializeFaceDetector = async () => {
       try {

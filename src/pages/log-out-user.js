@@ -11,6 +11,7 @@ const TransitionPage = () => {
 
   useEffect(() => {
     // Redirect after a brief delay (e.g., 1.5 seconds)
+    setLoginName(null)
     const timer = setTimeout(() => {
       if (loginReturnLoc) {
         history.push(loginReturnLoc);

@@ -115,19 +115,19 @@ section {
 
 .bottom-nav-menu {
   position: fixed; /* Fixed position to stick to the viewport */
-  left: 0; /* Align with the left edge */
-  bottom: 0; /* Stick to the bottom */
+  left: 2px; /* Align with the left edge */
+  bottom: 2px; /* Stick to the bottom */
   width: 15vw; /* Match the width of the sidebar */
   background-color: #eeeff0; /* Sidebar background color */
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for separation */
   border-top: 1px solid #ddd; /* Optional top border */
-  padding: 10px 15px; /* Padding for spacing */
+  padding: 5px 10px; /* Padding for spacing */
   display: flex;
   flex-direction: column; /* Stack items vertically */
   align-items: left; /* Center align items */
   z-index: 1000; /* Ensure it appears above content */
   border-radius: 10px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 .bottom-nav-item {
   text-decoration: none;
@@ -158,5 +158,6 @@ section {
 }
 
 .bottom-nav-menu.flip {
-  transform: rotateY(180deg);
+  transform: rotateX(360deg);
+  transition: transform 1.5s ease-in; /* Adjust the duration to slow down */
 }
