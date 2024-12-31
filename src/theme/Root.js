@@ -64,6 +64,7 @@ const Root = ({ children }) => {
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
       )}
+      {children}
       <div className={`bottom-nav-menu`}>
            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
              <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
@@ -80,7 +81,6 @@ const Root = ({ children }) => {
              <strong style={{ marginLeft: '10px' }}>{loginName ? 'Log Out User' : 'Log In User'}</strong>
            </div>
          </div>
-      {children}
     </GlobalPhotoContext.Provider>
   );
 };
