@@ -76,13 +76,13 @@ const Root = ({ children }) => {
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
       )}
-      {(<div className={`bottom-nav-menu`}>
+      <div className={`bottom-nav-menu`}>
            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
              <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
            </div>
            <div
              className="bottom-nav-item"
-             //onClick={faceLoginClick}
+             onClick={faceLoginClick}
              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
            >
              <img
@@ -93,7 +93,6 @@ const Root = ({ children }) => {
              <strong style={{ marginLeft: '10px' }}>{loginName ? 'Log Out User' : 'Log In User'}</strong>
            </div>
          </div>
-      )}
       {children}
     </GlobalPhotoContext.Provider>
   );
