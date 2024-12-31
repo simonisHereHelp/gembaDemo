@@ -2,10 +2,9 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
 import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
-//import BottomNav from '../components/BottomNav';
 import loginIcon from '@site/static/img/log-in.png';
 import logoutIcon from '@site/static/img/log-out.png';
-
+import swishSound from '@site/static/img/swoosh.mp3';
 // Create a context for managing the global photos
 export const GlobalPhotoContext = createContext();
 
@@ -21,6 +20,7 @@ const Root = ({ children }) => {
   const [chapterId, setChapterId] = useState(null); 
   const [loginName, setLoginName] = useState(null); // Global login state
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
+  const swishAudio = useRef(new Audio(swishSound));
 
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
@@ -51,6 +51,8 @@ const Root = ({ children }) => {
   }, [location.pathname, isVideoMode]);
 
   const handleIconClick = () => {
+    swishAudio.current.currentTime = 0; // Reset sound
+    swishAudio.current.play(); // Play sound
     setLoginReturnLoc(location.pathname);
     history.push('/face');
   };
