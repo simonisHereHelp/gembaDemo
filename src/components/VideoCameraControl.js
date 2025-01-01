@@ -120,8 +120,7 @@ class VideoCameraControl extends React.Component {
   handleProgressStop() {
     const { endTime } = this.props;
     if (this.p && endTime) {
-      console.log(`Stopping playback at endTime: ${endTime}`);
-      this.p.pause();
+      this.setState({ playing: false })
       this.p.seekTo(0); // Reset to the beginning
     }
   }
@@ -129,7 +128,6 @@ class VideoCameraControl extends React.Component {
   handleProgressSeekStart() {
     const { startTime } = this.props;
     if (this.p && startTime) {
-      console.log(`Seeking to startTime: ${startTime}`);
       this.p.seekTo(startTime);
     } else {
       console.error("Player reference is not available for seeking");
@@ -223,7 +221,6 @@ class VideoCameraControl extends React.Component {
                     captureImage(this.webcamRef, this.canvasRef, CANVAS_WIDTH, CANVAS_HEIGHT, chapterId, savedPhotos, setSavedPhotos);
                     if (chapterId !== null) {
                       setChapterId(chapterId + 1); // Update chapterId to navigate to the next chapter
-                      console.log(`Navigating to chapter ${chapterId + 1}`);
                     }
                   }}
                 >

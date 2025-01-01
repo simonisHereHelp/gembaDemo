@@ -55,7 +55,6 @@ const VideoChapters = ({ }) => {
       const end = findEndTime(chapterId); // Get the end time for the chapter
       setStartTime(start);
       setEndTime(end);
-      console.log(`Updated startTime: ${start}, endTime: ${end} for chapterId: ${chapterId}`);
     }
   }, [chapterId]);
 

@@ -41,7 +41,6 @@ const Root = ({ children }) => {
       // Apply history.push to restore the last visited chapter
       if (chapterId !== null) {
         history.push(`/docs/prov${chapterId + 1}`); // Adjust according to your URL structure
-        console.log(`Returning to prov${chapterId + 1}`);
       }
     }
   }, [isVideoMode, initialized, chapterId, previousLocation]);
@@ -51,7 +50,6 @@ const Root = ({ children }) => {
       // Apply history.push to restore the last visited chapter
       if (chapterId !== null) {
         history.push(`/docs/prov${chapterId + 1}`); // Adjust according to your URL structure
-        console.log(`Returning to prov${chapterId + 1}`);
       }
     }
   }, [loginReturnLoc]);
@@ -60,7 +58,6 @@ const Root = ({ children }) => {
     if (isVideoMode) {
       const newChapterId = findChapterId(location); // Find the chapterId using location
       setChapterId(newChapterId);
-      console.log("root new ChapterId ", newChapterId);
     }
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);

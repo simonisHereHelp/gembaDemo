@@ -5,13 +5,15 @@ import Layout from "@theme/Layout";
 import logOutIcon from '@site/static/img/log-out.png'
 
 
-const TransitionPage = () => {
-  const { loginName, setLoginName, loginReturnLoc } = useContext(GlobalPhotoContext);
+const LogoutPage = () => {
+  const { loginName, setLoginName, loginReturnLoc, setSavedPhotos } = useContext(GlobalPhotoContext);
   const history = useHistory();
 
   useEffect(() => {
     // Redirect after a brief delay (e.g., 1.5 seconds)
     setLoginName(null)
+    setSavedPhotos(Array(12).fill(null));
+    setLoginName(null);
     const timer = setTimeout(() => {
       if (loginReturnLoc) {
         history.push(loginReturnLoc);
@@ -44,4 +46,4 @@ const TransitionPage = () => {
 
 };
 
-export default TransitionPage;
+export default LogoutPage;
