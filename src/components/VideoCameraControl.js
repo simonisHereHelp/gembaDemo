@@ -14,7 +14,7 @@ class VideoCameraControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playing: false,  // Initially, the video is not playing
+      playing: true,  // Initially, the video is not playing
       initialized: this.props.initialized,  // Indicates if the first interaction has happened
       isToggled: this.props.isToggled,  // Control the toggle between sizes
       showPlayPauseButton: true,  // Control the visibility of the play/pause button
