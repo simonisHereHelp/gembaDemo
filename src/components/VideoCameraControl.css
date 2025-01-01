@@ -80,10 +80,8 @@
 
 #webcam.toggled {
     width: 100%;               /* Set the video width to fill the parent container */
-    height: 100%;              /* Set the video height to fill the parent container */
-    max-width: 960px;           /* Toggled max width */
-    max-height: 720px;          /* Toggled max height */
-    object-fit: cover;          /* Maintain aspect ratio and fill the container */
+    height: auto;              /* Set the video height to fill the parent container */
+    object-fit: contain;          /* Maintain aspect ratio and fill the container */
     overflow: hidden;           /* Ensure the content stays within the rounded corners */
     transition: all 1.0s ease;
 }
