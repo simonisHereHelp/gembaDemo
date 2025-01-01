@@ -112,17 +112,14 @@ const FaceDetection = () => {
   };
 
   useEffect(() => {
-    if (counter + counterFail >= 5) {
+    if (counter + counterFail >= 8) {
       const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
       setLoginName(counter > counterFail ? randomId : null);
-
-      setTimeout(() => {
         if (loginReturnLoc) {
           history.push(loginReturnLoc);
         } else {
           history.push("/");
         }
-      }, 500); // Small delay to allow UI updates
     }
   }, [counter, counterFail]);
 

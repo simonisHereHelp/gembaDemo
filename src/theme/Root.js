@@ -46,6 +46,16 @@ const Root = ({ children }) => {
       }
     }
   }, [isVideoMode, initialized, chapterId, previousLocation]);
+  useEffect(() => {
+    if (isVideoMode && loginReturnLoc) {
+      // If initialized and the user is returning to Videos from a different section
+      // Apply history.push to restore the last visited chapter
+      if (chapterId !== null) {
+        history.push(`/docs/prov${chapterId + 1}`); // Adjust according to your URL structure
+        console.log(`Returning to prov${chapterId + 1}`);
+      }
+    }
+  }, [loginReturnLoc]);
 
   useEffect(() => {
     if (isVideoMode) {

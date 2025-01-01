@@ -62,7 +62,7 @@ const VideoChapters = ({ }) => {
       setEndTime(end);
       console.log(`Updated startTime: ${start}, endTime: ${end} for chapterId: ${chapterId}`);
     }
-  }, [chapterId, currentTime]);
+  }, [chapterId]);
 
   return (
     <>
