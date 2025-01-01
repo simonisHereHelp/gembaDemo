@@ -22,7 +22,6 @@ const Root = ({ children }) => {
   const [loginReturnLoc, setLoginReturnLoc] = useState(null); 
   const swishAudio = useRef(null);
   const [isFlipped, setIsFlipped] = useState(false); // State for flip animation
-  const [recallTime, setRecallTime] = useState(null); // State for flip animation
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
 
@@ -91,7 +90,6 @@ const Root = ({ children }) => {
       chapterId, setChapterId,
       loginName, setLoginName,
       loginReturnLoc, setLoginReturnLoc,
-      recallTime, setRecallTime
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 

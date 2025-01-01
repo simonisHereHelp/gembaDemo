@@ -9,7 +9,6 @@ const VideoChapters = ({ }) => {
     initialized, setInitialized, 
     isToggled, setIsToggled, 
     chapterId, setChapterId,
-    recallTime, setRecallTime
   } = useContext(GlobalPhotoContext);
   
   const [startTime, setStartTime] = useState(null);
@@ -43,21 +42,17 @@ const VideoChapters = ({ }) => {
       });
     }
   }, [chapterId, savedPhotos]);
-  // Task 2: Find start (or recallTime) and end time based on chapterId and pass to VideoCameraControl
+  // Task 2: Find start and end time based on chapterId and pass to VideoCameraControl
   useEffect(() => {
     if (chapterId === null) {
       // Case 1: chapterId is null
       if (previousLocation?.startsWith('docs/prov')) {
-        setRecallTime(currentTime)
-        console.log(`Saved recallTime for ${previousLocation}: ${currentTime}`);
-      } else {
-        console.log('No action taken as previousLocation is not from docs/prov');
+
       }
     } else {
       // Case 2: chapterId is not null
-      const start = recallTime?? findStartTime(chapterId); // Use recallTime if available
+      const start = findStartTime(chapterId); 
       const end = findEndTime(chapterId); // Get the end time for the chapter
-      setRecallTime(null)
       setStartTime(start);
       setEndTime(end);
       console.log(`Updated startTime: ${start}, endTime: ${end} for chapterId: ${chapterId}`);
@@ -73,7 +68,6 @@ const VideoChapters = ({ }) => {
           setChapterId={setChapterId} // Pass setChapterId to VideoCameraControl
           startTime={startTime} 
           endTime={endTime}
-          setCurrentTime={setCurrentTime} 
           savedPhotos={savedPhotos} 
           setSavedPhotos={setSavedPhotos} 
           initialized={initialized}  // Pass global initialized state

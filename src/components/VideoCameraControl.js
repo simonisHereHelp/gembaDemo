@@ -15,15 +15,15 @@ class VideoCameraControl extends React.Component {
     super(props);
     this.state = {
       playing: true,  // Initially, the video is not playing
-      initialized: this.props.initialized,  // Indicates if the first interaction has happened
-      isToggled: this.props.isToggled,  // Control the toggle between sizes
+      timer: 0, 
       showPlayPauseButton: true,  // Control the visibility of the play/pause button
     };
     this.playUntil = this.playUntil.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
-    this.initializePlay = this.initializePlay.bind(this);
+    this.handleProgressStop = this.handleProgressStop.bind(this);
+    this.handleProgressSeekStart = this.handleProgressSeekStart.bind(this);
     this.toggleView = this.toggleView.bind(this); // Bind toggleView here
-    this.openControlCenter = this.openControlCenter.bind(this); // Bind openControlCenter here
+    this.initialLaunch = this.initialLaunch.bind(this); // Bind openControlCenter here
     this.playPause = this.playPause.bind(this); // Bind playPause function
     this.canvasRef = React.createRef();
     this.webcamRef = React.createRef();  // Ref for accessing webcam video element
@@ -39,19 +39,15 @@ class VideoCameraControl extends React.Component {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
-  openControlCenter() {
-    this.setState(
-      { 
-        initialized: true      // Mark as initialized
-      },
-      () => {
-        this.props.setInitialized(true);  // Update global initialized state
-        this.startWebcam(); 
-      }
-    );
+  initialLaunch() {
+    //intial video and open webcam
+    const { setInitialized } = this.props;
+    setInitialized(true); 
+    this.startWebcam(); 
   }
 
   playUntil(startTime, endTime) {
+    console.log("playUntil ", startTime)
     if (isNaN(startTime) || isNaN(endTime)) {
       console.error("Invalid startTime or endTime provided:", startTime, endTime);
       return;
@@ -82,27 +78,11 @@ class VideoCameraControl extends React.Component {
       console.error("Error accessing the webcam", err);
     }
   }
-  // First interaction to initialize the video with sound
-  initializePlay() {
-    const { startTime, endTime, chapterId } = this.props;  // Get startTime, endTime, and chapterId from props
-    if (startTime !== undefined && endTime !== undefined && chapterId !== undefined) {
-      this.setState({ 
-        playing: true,  // Start video playback
-        initialized: true,  // Mark the player as initialized locally
-      }, () => {
-        this.props.setInitialized(true);  // Update global initialized state
-        this.playUntil(parseFloat(startTime), parseFloat(endTime));  // Start video
-      });
-    } else {
-      console.error("startTime, endTime, or chapterId is missing in the props");
-    }
-  }
   
   // Automatically play the next segment when the component updates (no user interaction needed)
   componentDidUpdate(prevProps) {
-    const { startTime, endTime, chapterId } = this.props;
-  
-    if (this.state.initialized &&
+    const {initialized, startTime,endTime,chapterId}  = this.props;
+    if (initialized &&
         (prevProps.startTime !== startTime || 
          prevProps.endTime !== endTime || 
          prevProps.chapterId !== chapterId)) {
@@ -124,19 +104,40 @@ class VideoCameraControl extends React.Component {
 
   // Stop the video when the progress reaches the endTime
   handleProgress(state) {
-    const currentTime = state.playedSeconds; // Get the current video time
-    this.setState({ currentTime });
-    if (this.props.setCurrentTime) {
-      this.props.setCurrentTime(currentTime);
-    };
-    if (this.props.endTime && state.playedSeconds >= this.props.endTime) {
-      this.setState({ playing: false,
-        showPlayPauseButton: false,  // Hide the play/pause button when video stops
-       });
-      console.log(`Video stopped at ${this.props.endTime} seconds`);
+    const { startTime, endTime } = this.props;
+    const currentPlayTime = state.playedSeconds; // Get the current video time
+    // Update the parent with the current playtime
+    this.setState({ timer: currentPlayTime });
+    // Check if the video has reached the end time
+    if (endTime && currentPlayTime >= endTime) {
+      this.handleProgressStop();
+    }
+    // Check if the current time is less than the start time and video is playing
+    if (startTime && currentPlayTime < startTime) {
+      this.handleProgressSeekStart()
+    }
+  }
+  handleProgressStop() {
+    const { endTime } = this.props;
+    if (this.p && endTime) {
+      console.log(`Stopping playback at endTime: ${endTime}`);
+      this.p.pause();
+      this.p.seekTo(0); // Reset to the beginning
     }
   }
 
+  handleProgressSeekStart() {
+    const { startTime } = this.props;
+    if (this.p && startTime) {
+      console.log(`Seeking to startTime: ${startTime}`);
+      this.p.seekTo(startTime);
+    } else {
+      console.error("Player reference is not available for seeking");
+    }
+  }
+
+
+  
   toggleView() {
     this.swishAudio.currentTime = 0;
     this.swishAudio.play();
@@ -153,11 +154,11 @@ class VideoCameraControl extends React.Component {
   }
   render() {
  
-    const { startTime, endTime, chapterId, savedPhotos, setSavedPhotos,setChapterId  } = this.props;  // Access savedPhotos and setSavedPhotos from props
+    const { startTime, endTime, currentTime, chapterId, savedPhotos, initialized, setSavedPhotos,setChapterId  } = this.props;  // Access savedPhotos and setSavedPhotos from props
     const { isToggled } = this.state;
     return (
       <>
-        {!this.state.initialized && (
+        {!initialized && (
           // Button that must be clicked to show ControlCenter
           <div id="ControlCenter" className="hidden launcher" style={{ 
             display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
@@ -166,7 +167,7 @@ class VideoCameraControl extends React.Component {
                 onClick={() => {
                   this.swishAudio.currentTime = 0;
                   this.swishAudio.play();
-                  this.openControlCenter(); // Correctly call the function here
+                  this.initialLaunch(); // Correctly call the function here
                 }}
                 style={{ padding: '15px 30px', fontSize: '20px', color: 'white', backgroundColor: 'orange', cursor: 'pointer' }}
               >
@@ -176,11 +177,11 @@ class VideoCameraControl extends React.Component {
           </div>
         )}
 
-     {this.state.initialized && (
+     {initialized && (
       <div id="ControlCenter" className="normal">
             {/* Display the current video time */}
             <div id="Timer-Board">
-              ⏱ {this.formatTime(this.state.currentTime)} {/* Time is displayed in mm:ss format */}
+            ⏱ {this.state.timer ? this.formatTime(this.state.timer) : ""}
             </div>
 
         <div id="VideoCenter" className={isToggled ? 'toggled' : 'normal'}>
