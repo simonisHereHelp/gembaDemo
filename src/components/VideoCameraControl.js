@@ -111,6 +111,7 @@ class VideoCameraControl extends React.Component {
     // Check if the video has reached the end time
     if (endTime && currentPlayTime >= endTime) {
       this.handleProgressStop();
+      this.setState({ showPlayPauseButton: false }); // Hide the play/pause button
     }
     // Check if the current time is less than the start time and video is playing
     if (startTime && currentPlayTime < startTime) {
