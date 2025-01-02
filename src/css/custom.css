@@ -250,9 +250,8 @@ section {
 }
 
 .navbar-right {
-  background-color: var(--ifm-color-primary-dark);
+  color: var(--ifm-color-primary-light);
   padding: 10px;
-  color: white;
 }
 
 .navbar-left > a,

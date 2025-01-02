@@ -3,8 +3,8 @@ import { FaceDetector, FilesetResolver } from "@mediapipe/tasks-vision";
 import Layout from "@theme/Layout";
 import { useHistory } from "react-router-dom";
 import { GlobalPhotoContext } from "../theme/Root";
-import loginIcon from "@site/static/img/log-in.png";
-import badge from "@site/static/img/badge.png";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 let faceDetectorInstance = null; // Global instance for reuse
 
@@ -42,9 +42,23 @@ const FaceDetection = () => {
   const threshold = 0.7;
   let isPredicting = false;
 
+  const markdownTable = `
+  | Field       | Value                |
+  |------------------|------------------------------|
+  | Name        | ${loginName || "N/A"} |
+  | Onboard Date|         |
+  | Title       |             |
+  | Department  |        |
+  | Contact     |         |
+  `;
+
   useEffect(() => {
     const loadFaceDetector = async () => {
       try {
+        const bottomNav = document.querySelector('.bottom-nav-menu');
+        if (bottomNav) {
+          bottomNav.style.display = 'none';
+        }    
         const detector = await initializeFaceDetector();
         setFaceDetector(detector);
       } catch (error) {
@@ -161,10 +175,10 @@ const FaceDetection = () => {
         </section>
       ) : (
         <section id="result" className="result-view">
-          <h2>{loginName ? `Login Successful` : "Login Unsuccessful"}</h2>
-          <h3>{loginName ? `User: ${loginName}` : "ID Not Found"}</h3>
-          <img src={badge} alt="Badge" />
-          <hr></hr>
+          <h3>{loginName ? `Login Successful` : "Login Unsuccessful"}</h3>
+          <h4>{loginName ? `User: ${loginName}` : "ID Not Found"}</h4>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
+          <p></p>
           <button className="passiveButton" onClick={handleButtonClick}>return to previous page...</button>
         </section>
       )}
