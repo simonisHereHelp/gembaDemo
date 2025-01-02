@@ -150,7 +150,16 @@ class VideoCameraControl extends React.Component {
   }
   
   componentDidMount() {
+    const { initialized } = this.props;
     this.startWebcam();  // Start webcam on component mount
+    if (!initialized) {
+      setTimeout(() => {
+        const button = document.querySelector('#ControlCenter button.passiveButton'); // Select the button
+        if (button) {
+          button.click(); // Programmatically trigger the button click
+        }
+      }, 2500); // 2.5-second delay
+    }
   }
   render() {
  
@@ -169,9 +178,8 @@ class VideoCameraControl extends React.Component {
                   this.swishAudio.play();
                   this.initialLaunch(); // Correctly call the function here
                 }}
-                style={{ padding: '15px 30px', fontSize: '20px', color: 'white', backgroundColor: 'orange', cursor: 'pointer' }}
               >
-                load video and microscope...
+                loading video and microscope...
               </button>
             </div>
           </div>
@@ -189,7 +197,7 @@ class VideoCameraControl extends React.Component {
             ref={(p) => {
               this.p = p;
             }}
-            url="https://vimeo.com/1043303526"
+            url="https://vimeo.com/1043489560"
             className="react-player"
             playing={this.state.playing}
             id="vemoVideo"

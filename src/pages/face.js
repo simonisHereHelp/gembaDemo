@@ -165,7 +165,7 @@ const FaceDetection = () => {
           <h3>{loginName ? `User: ${loginName}` : "ID Not Found"}</h3>
           <img src={badge} alt="Badge" />
           <hr></hr>
-          <button className="passiveButton" onClick={handleButtonClick}></button>
+          <button className="passiveButton" onClick={handleButtonClick}>return to previous page...</button>
         </section>
       )}
     </Layout>

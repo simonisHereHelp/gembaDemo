@@ -73,7 +73,8 @@
 
 .passiveButton {
   background: transparent;
-  color: whitesmoke;
+  color: var(--ifm-color-primary-light);
+  border: none;
 }
 
 .navbar__title {
