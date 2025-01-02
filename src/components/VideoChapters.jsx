@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import { GlobalPhotoContext } from '@site/src/theme/Root'; // Global context
 import { findStartTime, findEndTime, findChapterTitle } from './findTimeStamp'; // Updated utilities
 import VideoCameraControl from './VideoCameraControl'; // Video component
-import { refreshBar } from './refreshBar'
+import { refreshBar } from './refreshBar';
 
 const VideoChapters = ({ }) => {
   const { 
@@ -18,7 +18,12 @@ const VideoChapters = ({ }) => {
 
   // Task 1: Sync savedPhotos with the Docusaurus sidebar when chapterId is valid
   useEffect(() => {
-    refreshBar(chapterId, savedPhotos, findChapterTitle);
+
+    if (chapterId !== null && savedPhotos) {
+      refreshBar(chapterId, savedPhotos, findChapterTitle);
+    } else {
+      console.warn("Either chapterId is null or savedPhotos is undefined.");
+    }
   }, [chapterId, savedPhotos]);
 
   // Task 2: Find start and end time based on chapterId and pass to VideoCameraControl
@@ -51,7 +56,7 @@ const VideoChapters = ({ }) => {
           initialized={initialized}  // Pass global initialized state
           setInitialized={setInitialized}  // Pass setter for initialized
           isToggled={isToggled}  // Pass global isToggled state
-          setIsToggled={setIsToggled}  // Pass setter for isToggled
+          setIsToggled={setIsToggled}
         />
       ) : null}
     </>

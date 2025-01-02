@@ -1,8 +1,13 @@
 // refreshBar.js
 export const refreshBar = (chapterId, savedPhotos, findChapterTitle) => {
+    if (!savedPhotos || !Array.isArray(savedPhotos)) {
+        console.error("savedPhotos is not a valid array:", savedPhotos);
+      } else {
+        console.log("savedPhotos in refreshBar:", savedPhotos);
+      }
+
     if (chapterId !== null) {
       const sidebarItems = document.querySelectorAll('.menu__link'); // Select sidebar items
-  
       // Update sidebar items with saved state
       savedPhotos.forEach((photo, index) => {
         if (photo) {

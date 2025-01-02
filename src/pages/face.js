@@ -35,6 +35,7 @@ const FaceDetection = () => {
   const [counter, setCounter] = useState(0);
   const [counterFail, setCounterFail] = useState(0);
   const [faceDetector, setFaceDetector] = useState(null);
+  const [detectionComplete, setDetectionComplete] = useState(false); // New state for detection completion
   const videoRef = useRef(null);
   const history = useHistory();
   const { loginName, setLoginName, loginReturnLoc } = useContext(GlobalPhotoContext); // Access the global state
@@ -78,9 +79,11 @@ const FaceDetection = () => {
     }
   };
 
+  let isPredicting = false;
   const predictWebcam = async () => {
-    if (!faceDetector || !videoRef.current) return;
+    if (!faceDetector || !videoRef.current || isPredicting) return;
 
+    isPredicting = true;
     const video = videoRef.current;
     const startTimeMs = performance.now();
 
@@ -106,20 +109,38 @@ const FaceDetection = () => {
       }
     } catch (error) {
       console.error("Error during prediction:", error);
+    } finally {
+      isPredicting = false;
+      requestAnimationFrame(predictWebcam);
     }
+  };
 
-    requestAnimationFrame(predictWebcam);
+  const releaseFaceDetector = async () => {
+    if (faceDetector) {
+      try {
+        await faceDetector.close(); // Release WebAssembly resources
+        console.log("Face detector resources released.");
+      } catch (error) {
+        console.error("Error releasing face detector resources:", error);
+      }
+    }
+  };
+
+  const handleButtonClick = async () => {
+    await releaseFaceDetector(); // Ensure face detector is fully released
+    const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
+    setLoginName(counter > counterFail ? randomId : null);
+
+    if (loginReturnLoc) {
+      history.push(loginReturnLoc);
+    } else {
+      history.push("/");
+    }
   };
 
   useEffect(() => {
-    if (counter + counterFail >= 8) {
-      const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
-      setLoginName(counter > counterFail ? randomId : null);
-        if (loginReturnLoc) {
-          history.push(loginReturnLoc);
-        } else {
-          history.push("/");
-        }
+    if (counter + counterFail >= 5) {
+      setDetectionComplete(true); // Detection is complete
     }
   }, [counter, counterFail]);
 
@@ -138,6 +159,11 @@ const FaceDetection = () => {
           ></video>
           <img src={badge} alt="Badge" className="flicker-badge" />
         </div>
+        {detectionComplete && (
+          <button className="return-button" onClick={handleButtonClick}>
+            Click to Return
+          </button>
+        )}
       </section>
     </Layout>
   );

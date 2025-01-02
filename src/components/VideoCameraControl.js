@@ -108,6 +108,7 @@ class VideoCameraControl extends React.Component {
     const currentPlayTime = state.playedSeconds; // Get the current video time
     // Update the parent with the current playtime
     this.setState({ timer: currentPlayTime });
+
     // Check if the video has reached the end time
     if (endTime && currentPlayTime >= endTime) {
       this.handleProgressStop();
