@@ -35,11 +35,12 @@ const FaceDetection = () => {
   const [counter, setCounter] = useState(0);
   const [counterFail, setCounterFail] = useState(0);
   const [faceDetector, setFaceDetector] = useState(null);
-  const [detectionComplete, setDetectionComplete] = useState(false); // New state for detection completion
+  const [detectionComplete, setDetectionComplete] = useState(false);
   const videoRef = useRef(null);
   const history = useHistory();
-  const { loginName, setLoginName, loginReturnLoc } = useContext(GlobalPhotoContext); // Access the global state
+  const { loginName, setLoginName, loginReturnLoc } = useContext(GlobalPhotoContext);
   const threshold = 0.7;
+  let isPredicting = false;
 
   useEffect(() => {
     const loadFaceDetector = async () => {
@@ -72,6 +73,7 @@ const FaceDetection = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       video.srcObject = stream;
       video.onloadedmetadata = () => {
+        video.play();
         predictWebcam();
       };
     } catch (error) {
@@ -79,7 +81,6 @@ const FaceDetection = () => {
     }
   };
 
-  let isPredicting = false;
   const predictWebcam = async () => {
     if (!faceDetector || !videoRef.current || isPredicting) return;
 
@@ -115,22 +116,9 @@ const FaceDetection = () => {
     }
   };
 
-  const releaseFaceDetector = async () => {
-    if (faceDetector) {
-      try {
-        await faceDetector.close(); // Release WebAssembly resources
-        console.log("Face detector resources released.");
-      } catch (error) {
-        console.error("Error releasing face detector resources:", error);
-      }
-    }
-  };
-
-  const handleButtonClick = async () => {
-    await releaseFaceDetector(); // Ensure face detector is fully released
-    const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
-    setLoginName(counter > counterFail ? randomId : null);
-
+  const handleButtonClick = () => {
+    const bottomNav = document.querySelector('.bottom-nav-menu');
+    bottomNav.style.display = 'flex';
     if (loginReturnLoc) {
       history.push(loginReturnLoc);
     } else {
@@ -139,32 +127,47 @@ const FaceDetection = () => {
   };
 
   useEffect(() => {
-    if (counter + counterFail >= 5) {
-      setDetectionComplete(true); // Detection is complete
+    const bottomNav = document.querySelector('.bottom-nav-menu');
+    if (counter + counterFail >= 10) {
+      const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
+      setLoginName(counter > counterFail ? randomId : null);
+      bottomNav.style.display = 'none'; // Hide the bottom nav menu
+      setDetectionComplete(true);
+
+      setTimeout(() => {
+        const button = document.querySelector('#result button'); // Select the button in the result section
+        if (button) {
+          button.click(); // Programmatically trigger the button click
+        }
+      }, 2500);
     }
   }, [counter, counterFail]);
 
   return (
     <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
-      <section className="faceCam-view">
-        <img src={loginIcon} alt="Login Icon" className="login-icon" />
-        <h2>Initializing Webcam...</h2>
-        <div className="video-container">
-          <video
-            id="webcam"
-            autoPlay
-            playsInline
-            ref={videoRef}
-            className="faceCam-video"
-          ></video>
-          <img src={badge} alt="Badge" className="flicker-badge" />
-        </div>
-        {detectionComplete && (
-          <button className="return-button" onClick={handleButtonClick}>
-            Click to Return
-          </button>
-        )}
-      </section>
+      {!detectionComplete ? (
+        <section id="webvideo" className="faceCam-view">
+          <h2></h2>
+          <h2>Initializing Webcam...</h2>
+          <div className="video-container">
+            <video
+              id="webcam"
+              autoPlay
+              playsInline
+              ref={videoRef}
+              className="faceCam-video"
+            ></video>
+          </div>
+        </section>
+      ) : (
+        <section id="result" className="result-view">
+          <h2>{loginName ? `Login Successful` : "Login Unsuccessful"}</h2>
+          <h3>{loginName ? `User: ${loginName}` : "ID Not Found"}</h3>
+          <img src={badge} alt="Badge" />
+          <hr></hr>
+          <button onClick={handleButtonClick}></button>
+        </section>
+      )}
     </Layout>
   );
 };

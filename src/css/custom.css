@@ -90,7 +90,7 @@ section {
 
 .faceCam-view {
   position: absolute; /* Change from relative to absolute for centering */
-  top: 10%; /* Move to the middle vertically */
+  top: 20%; /* Move to the middle vertically */
   left: 50%; /* Move to the middle horizontally */
   transform: translate(-50%, 0); /* Center the element by offsetting 50% of its width and height */
   width: 40%;
@@ -118,7 +118,7 @@ section {
   left: 2px; /* Align with the left edge */
   bottom: 2px; /* Stick to the bottom */
   width: 15vw; /* Match the width of the sidebar */
-  background-color: #eeeff0; /* Sidebar background color */
+  background-color: #cbe1f8; /* Light background on hover */
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for separation */
   border-top: 1px solid #ddd; /* Optional top border */
   padding: 5px 10px; /* Padding for spacing */
@@ -127,19 +127,20 @@ section {
   align-items: left; /* Center align items */
   z-index: 1000; /* Ensure it appears above content */
   border-radius: 10px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 .bottom-nav-item {
   text-decoration: none;
-  font-size: 0.8rem;
-  text-align: center;
+  font-size: 1.rem;
+  text-align: left;
   width: 100%; /* Full-width links */
   box-sizing: border-box; /* Include padding in width calculation */
   border-radius: 20px
 }
 
 .bottom-nav-item:hover {
-  background-color: #e9ecef; /* Light background on hover */
+  background-color: #91a3be; /* Light background on hover */
+  font-size: 1.rem;
   border-radius: 4px; /* Optional rounded corners */
 }
 
@@ -174,25 +175,16 @@ section {
 .video-container {
   position: relative;
   display: inline-block;
+  width: 70%;
 }
 
 /* Styling for the webcam video */
 .faceCam-video {
-  width: 100%;
   height: auto;
   z-index: 1;
+  border-radius: 50% / 100%;
 }
 
-/* Styling for the flicker badge */
-.flicker-badge {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30%;
-  z-index: 1000;
-  animation: flicker 1.5s infinite;
-}
 
 /* Flicker animation */
 @keyframes flicker {
@@ -203,4 +195,48 @@ section {
   50% {
     opacity: 0.5;
   }
+}
+
+.result-view {
+  display: flex;
+  padding: 15px 10px; /* Padding for spacing */
+  flex-direction: column; /* Stacks items vertically */
+  align-items: center; /* Centers items horizontally */
+  justify-content: center; /* Centers items vertically */
+  text-align: center; /* Centers text */
+  width: 70%; /* Full width */
+  height: 70%; /* Full viewport height */
+  position: relative; /* Needed for absolute positioning of flicker badge */
+}
+
+
+.result-view img.flicker-badge {
+  max-width: 100px; /* Ensure the image is properly sized */
+  height: auto;
+  margin: 10px 0; /* Add spacing around the image */
+  position: relative; /* Positions the badge relative to other elements */
+}
+
+.result-view button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: var(--ifm-color-primary-darker); /* Uses Docusaurus primary darker color */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.result-view button:hover {
+  background-color: #333; /* Darker shade on hover */
+}
+
+.flicker-badge {
+  animation: flicker 1.5s infinite; /* Flicker animation */
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
