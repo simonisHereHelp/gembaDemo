@@ -163,7 +163,7 @@ class VideoCameraControl extends React.Component {
           <div id="ControlCenter" className="hidden launcher" style={{ 
             display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
             <div>
-              <button
+              <button className='passiveButton'
                 onClick={() => {
                   this.swishAudio.currentTime = 0;
                   this.swishAudio.play();
@@ -192,8 +192,7 @@ class VideoCameraControl extends React.Component {
             url="https://vimeo.com/1043303526"
             className="react-player"
             playing={this.state.playing}
-            width="100%"
-            height="100%"
+            id="vemoVideo"
             style={{
               position: 'relative',
               zIndex: this.state.isToggled ? 1500 : 1000,        // Toggle z-index to match the container
@@ -212,11 +211,11 @@ class VideoCameraControl extends React.Component {
         
 
       {/* Button Container */}
-        <div id="ButtonsContainer"  >
+        <div id="primaryButtonsContainer"  >
 
               {/* Button 1 - Capture Image */}
               {chapterId < 12 && (
-                <button 
+                <button className='primaryButton'
                   onClick={() => {
                     this.cameraShutterAudio.currentTime = 0;
                     this.cameraShutterAudio.play();  // Play camera shutter sound
@@ -231,13 +230,13 @@ class VideoCameraControl extends React.Component {
               )}
 
               {/* Toggle View Button */}
-              <button onClick={this.toggleView}>
+              <button className='primaryButton' onClick={this.toggleView}>
                 {isToggled ? '2x Video' : '2x Microscope'}
               </button>
 
               {/* PlayPause */}
               {this.state.showPlayPauseButton && (
-                <button id="playPauseButton" onClick={this.playPause}>
+                <button className='primaryButton' id="playPauseButton" onClick={this.playPause}>
                   {this.state.playing ? 'Pause' : 'Play'}
                 </button>
               )}

@@ -94,20 +94,16 @@ const Root = ({ children }) => {
       {children}
       <section>
       <div className={`bottom-nav-menu${isFlipped ? ' flip' : ''}`}>
-           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-             <strong>{loginName ? `User: ${loginName}` : 'No User Logged In'}</strong>
-           </div>
+             <p>{loginName ? `User: ${loginName}` : 'No User Logged In'}</p>
            <div
-             className="bottom-nav-item"
-             onClick={handleIconClick}
-             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-           >
-             <img
+             className="primaryButton center-align "
+             onClick={handleIconClick}>
+            <img
                src={loginName ? logoutIcon : loginIcon}
                alt={loginName ? 'Log Out' : 'Log In'}
                className="nav-icon"
              />
-             <strong style={{ marginLeft: '10px' }}>{loginName ? 'Log Out User' : 'Log In User'}</strong>
+             {loginName ? 'Log Out' : 'Log In'}
            </div>
          </div>
         </section>

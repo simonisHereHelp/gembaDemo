@@ -12,7 +12,7 @@
   --ifm-color-primary-darkest: #003366; /* Darkest blue */
   --ifm-color-primary-light: #339aff; /* Lighter blue */
   --ifm-color-primary-lighter: #66b2ff; /* Even lighter blue */
-  --ifm-color-primary-lightest: #99ccff; /* Lightest blue */
+  --ifm-color-primary-lightest: #bcd8f4; /* Lightest blue */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
@@ -28,49 +28,59 @@
   --ifm-color-primary-lightest: #b3ecff; /* Lightest blue for dark mode */
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+#primaryButtonsContainer {
+  position: absolute;
+  bottom: 0.5vh;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1001;
+  border: none;
+}
+
+.primaryButton {
+  flex: 1; /* Make buttons equal in width */
+  padding: 5px 5px;
+  font-size: 1.2rem;
+  background-color: var(--ifm-color-primary-dark); /* Dark Slate Blue */
+  color: whitesmoke;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin: 0 40px;
+  height: 7vh; /* Increase the height by 50% */
+}
+
+.primaryButton:hover {
+  background-color: var(--ifm-color-primary-light); /* Light background on hover */
+}
+
+.primaryButton:last-child {
+  margin-right: 0; /* Remove right margin for the last button */
+}
+
+.primaryButton:last-child {
+  margin-right: 0; /* Remove right margin for the last button */
+}
+
+.center-align {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Optional, depending on the parent container */
+}
+
+.passiveButton {
+  background: transparent;
+  color: whitesmoke;
+}
+
 .navbar__title {
-  font-size: 2.0rem; /* Adjust font size */
-  color: #007acc; /* Change text color */
+  font-size: 1.5rem; /* Adjust font size */
+  color: var(--ifm-color-primary-dark);
   letter-spacing: 0.8px;
   font-style: italic;
-}
-.face-login-button {
-  position: fixed;
-  left: 1vw;
-  bottom: 3vh;
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Vertically center content */
-  justify-content: center; /* Horizontally center content */
-  transform: translateY(-50%);
-  background-color: var(--ifm-color-primary-dark);
-  color: #fff;
-  border: 2px solid #fff; /* White border */
-  border-radius: 50px;
-  padding: 30px 35px;
-  gap: 10px; /* Space between icon and text */
-  font-size: 1rem; 
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.6); /* Optional shadow for a modern look */
-  animation: flash 1.5s infinite ease-in-out; /* Add flashing animation */
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-/* Define keyframes for flashing effect */
-@keyframes flash {
-  0%, 100% {
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6); /* Default shadow */
-    background-color: var(--ifm-color-primary-dark);
-  }
-  50% {
-    box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.8); /* Brightened shadow */
-    background-color: var(--ifm-color-primary); /* Lighter background */
-  }
-}
-
-.face-login-button:hover {
-  transform: scale(1.1); /* Slightly enlarge on hover */
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8); /* Stronger shadow on hover */
 }
 
 
@@ -118,7 +128,7 @@ section {
   left: 2px; /* Align with the left edge */
   bottom: 2px; /* Stick to the bottom */
   width: 15vw; /* Match the width of the sidebar */
-  background-color: #cbe1f8; /* Light background on hover */
+  background-color: #e6e7e8; /* Light background on hover */
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for separation */
   border-top: 1px solid #ddd; /* Optional top border */
   padding: 5px 10px; /* Padding for spacing */
@@ -131,17 +141,18 @@ section {
 }
 .bottom-nav-item {
   text-decoration: none;
-  font-size: 1.rem;
+  background-color: var(--ifm-color-primary-dark); 
+  color: whitesmoke;
+  font-size: 1.2rem;
   text-align: left;
   width: 100%; /* Full-width links */
   box-sizing: border-box; /* Include padding in width calculation */
-  border-radius: 20px
+  border-radius: 30px
 }
 
 .bottom-nav-item:hover {
-  background-color: #91a3be; /* Light background on hover */
-  font-size: 1.rem;
-  border-radius: 4px; /* Optional rounded corners */
+  background-color: var(--ifm-color-primary-light); /* Light background on hover */
+  font-size: 1.2rem;
 }
 
 .nav-icon {
@@ -217,21 +228,6 @@ section {
   position: relative; /* Positions the badge relative to other elements */
 }
 
-.result-view button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: var(--ifm-color-primary-darker); /* Uses Docusaurus primary darker color */
-  color: white; /* White text */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.result-view button:hover {
-  background-color: #333; /* Darker shade on hover */
-}
-
 .flicker-badge {
   animation: flicker 1.5s infinite; /* Flicker animation */
 }
@@ -240,3 +236,32 @@ section {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
 }
+
+/* Navbar customization */
+.navbar__items {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-left {
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+}
+
+.navbar-right {
+  background-color: var(--ifm-color-primary-dark);
+  padding: 10px;
+  color: white;
+}
+
+.navbar-left > a,
+.navbar-right > a {
+  color: inherit;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.navbar-right > a:hover {
+  text-decoration: underline;
+}
+

@@ -1,5 +1,6 @@
 #ControlCenter {
-    background-color: #e1eff0; /* Light Blue */
+    background-color: var(--ifm-color-primary-lightest); /* Light Blue */
+    border-radius: 20px;
     height: 80vh;
     width: 75vw;
     position: fixed;
@@ -10,7 +11,7 @@
     justify-content: center;
     align-items: flex-start;
     flex-direction: row;
-    padding: 10px;
+    padding: 10px 10px;
     box-sizing: border-box;
     border: none;
     transition: all 0.5s ease; /* Smooth transition between hidden and visible states */
@@ -26,7 +27,7 @@
 }
 
 #VideoCenter, #WebcamCenter {
-    background-color: grey;  /* Set the background color to grey */
+    background-color:var(--ifm-color-primary-lightest);  /* Set the background color to grey */
     position: relative;
     border-radius: 15px;
     border: none;
@@ -36,9 +37,9 @@
 #WebcamCenter.normal, #VideoCenter.toggled {
     position: absolute;
     top: -4vh;               
-    right: 0vw;
-    width: 100%;               /* Set the video width to fill the parent container */
-    height: 100%;              /* Set the video height to fill the parent container */
+    right: 2vw;
+    width: auto;               /* Set the video width to fill the parent container */
+    height: 80%;              /* Set the video height to fill the parent container */
     max-width: 450px;           /* Normal max width */
     max-height: 300px;          /* Normal max height */
     z-index: 1002;
@@ -47,15 +48,15 @@
     align-items: center;
     overflow: hidden;
     transition: all 0.5s ease;
-    border: 3px solid #fdfdbe;
+    border: 3px solid #ffffff;
 } 
 
 #WebcamCenter.toggled, #VideoCenter.normal {
     position: absolute;
-    left: 0vw;               /* Set 40px from the top */
+    left: 2vw;               /* Set 40px from the top */
     top: 2vh; 
-    width: 960px;               /* Set the video width to fill the parent container */
-    height: 720px;              /* Set the video height to fill the parent container */
+    width: auto;               /* Set the video width to fill the parent container */
+    height: 80%;              /* Set the video height to fill the parent container */
     max-width: 960px;           /* Toggled max width */
     max-height: 720px;          /* Toggled max height */
     z-index: 1000;
@@ -66,6 +67,24 @@
     overflow: hidden;
     transition: all 0.5s ease;
 } 
+
+#vimeoVideo.toggled {
+    width: 100%;               /* Set the video width to fill the parent container */
+    height: 100%;              /* Set the video height to fill the parent container */
+    max-width: 450px;           /* Normal max width */
+    max-height: 300px;          /* Normal max height */
+    object-fit: contain;          /* Maintain aspect ratio and fill the container */
+    overflow: hidden;           /* Ensure the content stays within the rounded corners */
+    transition: all 1.0s ease;
+}
+
+#vimeoVideo.normal {
+    width: 100%;               /* Set the video width to fill the parent container */
+    height: 100%;              /* Set the video height to fill the parent container */
+    object-fit: cover;          /* Maintain aspect ratio and fill the container */
+    overflow: hidden;           /* Ensure the content stays within the rounded corners */
+    transition: all 1.0s ease;
+}
 
 /* Video element classes for different states */
 #webcam.normal {
@@ -86,36 +105,6 @@
     transition: all 1.0s ease;
 }
 
-#ButtonsContainer {
-    position: absolute;
-    bottom: 0.5vh;
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    z-index: 1001;
-    border: none;
-}
-
-button {
-    flex: 1; /* Make buttons equal in width */
-    padding: 5px 10px;
-    font-size: 1.2rem;
-    background-color: #4F647B; /* Dark Slate Blue */
-    color: rgb(248, 229, 152);
-    border: none;
-    border-radius: 40px;
-    cursor: pointer;
-    margin: 0 40px;
-    height: 7vh; /* Increase the height by 50% */
-}
-
-button:last-child {
-    margin-right: 0; /* Remove right margin for the last button */
-}
-
-button:last-child {
-    margin-right: 0; /* Remove right margin for the last button */
-}
 
 .launcher {
     position: relative;
@@ -139,7 +128,7 @@ button:last-child {
     left: 2vw;
     font-size: 20px;
     color: white;
-    background-color: #4F647B; /* Dark Slate Blue */
+    background-color: var(--ifm-color-primary-light); /* Dark Slate Blue */
     padding: 10px 25px;
     border-radius: 10px;
     z-index: 1001; /* Ensure it is above other elements */

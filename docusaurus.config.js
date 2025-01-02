@@ -49,16 +49,19 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Take Photos▶️',
+            className: 'navbar-left',
           },
           {
             to: 'myphotos',
             position: 'left',
             label: 'Get Certified📂',
+            className: 'navbar-left',
           },
           {
             to: 'my-wallet',
             position: 'left',
             label: 'My Certs Wallet🌠',
+            className: 'navbar-left',
           },
           {
             type: 'dropdown',
@@ -76,23 +79,34 @@ const config = {
                 label: 'Choice of Adapters⚙️',
               },
             ],
-          },
-          {
-            to: 'goodbye',
-            position: 'left',
-            label: 'Exit⏫',
+            className: 'navbar-left',
           },
           {
             type: 'doc',
             docId: 'aboutProject/aboutUs/contactInfo',
             label: 'Talk to Tutor🙍🏽‍♂️',
             position: 'right',
+            className: 'navbar-left',
+          },
+          {
+            to: 'goodbye',
+            position: 'left',
+            label: 'Exit⏫',
+            className: 'navbar-left',
           },
           {
             type: 'doc',
             docId: 'pricing', // Updated route
             label: 'Pricing⚙️',
             position: 'right',
+            className: 'navbar-right',
+          },
+          {
+            type: 'doc',
+            docId: 'pricing', // Updated route
+            label: 'Service',
+            position: 'right',
+            className: 'navbar-right',
           }
         ],
       },
