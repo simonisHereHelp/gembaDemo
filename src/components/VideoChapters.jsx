@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import { GlobalPhotoContext } from '@site/src/theme/Root'; // Global context
 import { findStartTime, findEndTime, findChapterTitle } from './findTimeStamp'; // Updated utilities
 import VideoCameraControl from './VideoCameraControl'; // Video component
+import { refreshBar } from './refreshBar'
 
 const VideoChapters = ({ }) => {
   const { 
@@ -17,31 +18,9 @@ const VideoChapters = ({ }) => {
 
   // Task 1: Sync savedPhotos with the Docusaurus sidebar when chapterId is valid
   useEffect(() => {
-    if (chapterId !== null) {
-      const sidebarItems = document.querySelectorAll('.menu__link'); // Select sidebar items
-
-      savedPhotos.forEach((photo, index) => {
-        if (photo) {
-          const chapterTitle = findChapterTitle(index); // Dynamically get chapter title
-          sidebarItems.forEach((item) => {
-            if (item.textContent.trim() === chapterTitle) {
-              item.textContent = `${chapterTitle} [saved]`; // Update sidebar item with [saved]
-            }
-          });
-        }
-      });
-
-      // Highlight the active sidebar item using Docusaurus' current route
-      const currentChapterTitle = findChapterTitle(chapterId);
-      sidebarItems.forEach((item) => {
-        if (item.textContent.trim() === currentChapterTitle) {
-          item.classList.add('menu__link--active'); // Use Docusaurus' active class
-        } else {
-          item.classList.remove('menu__link--active');
-        }
-      });
-    }
+    refreshBar(chapterId, savedPhotos, findChapterTitle);
   }, [chapterId, savedPhotos]);
+
   // Task 2: Find start and end time based on chapterId and pass to VideoCameraControl
   useEffect(() => {
     if (chapterId === null) {
