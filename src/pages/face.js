@@ -45,8 +45,8 @@ const FaceDetection = () => {
   const markdownTable = `
   | Field       | Value                |
   |------------------|------------------------------|
-  | Name        | ${loginName || "N/A"} |
-  | Onboard Date|         |
+  | Name        | ${loginName || "N/A"}. (other information here) |
+  | Onboard Date|  information ............ |
   | Title       |             |
   | Department  |        |
   | Contact     |         |
@@ -177,7 +177,9 @@ const FaceDetection = () => {
         <section id="result" className="result-view">
           <h3>{loginName ? `Login Successful` : "Login Unsuccessful"}</h3>
           <h4>{loginName ? `User: ${loginName}` : "ID Not Found"}</h4>
+          <div style={{ width: '60%', margin: '0 auto' }}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
+          </div>
           <p></p>
           <button className="passiveButton" onClick={handleButtonClick}>return to previous page...</button>
         </section>

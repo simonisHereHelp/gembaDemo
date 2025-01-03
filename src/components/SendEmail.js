@@ -19,7 +19,7 @@ const SendEmail = ({ title }) => {
     }
   }, [loginName]);
 
-  const recipients = ["simon@ishere.help", "presenter.simon@gmail.com"];
+  const recipients = ["presenter.simon@gmail.com"];
   const getRecipientName = (email) => email.split('@')[0];
 
   const handleSendEmail = async () => {

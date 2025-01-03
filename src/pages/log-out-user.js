@@ -12,8 +12,8 @@ const LogoutPage = () => {
   const markdownTable = `
   | Field       | Value                |
   |------------------|------------------------------|
-  | Name        | ${loginName || "N/A"} |
-  | Onboard Date|         |
+  | Name        | ${loginName || "N/A"}. (other information here) |
+  | Onboard Date|  information ............ |
   | Title       |             |
   | Department  |        |
   | Contact     |         |
@@ -56,9 +56,11 @@ const LogoutPage = () => {
 
   return (
     <Layout title="Log Out" description="via FaceCam for seamless log-in">
-      <section className="faceCam-view">
+      <section className="result-view">
         <h3>Logging out user...</h3>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
+          <div style={{ width: '60%', margin: '0 auto' }}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
+          </div>
         <button
           className="passiveButton"
           onClick={handleButtonClick}

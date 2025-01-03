@@ -135,8 +135,6 @@ class VideoCameraControl extends React.Component {
       console.error("Player reference is not available for seeking");
     }
   }
-
-
   
   toggleView() {
     this.swishAudio.currentTime = 0;
@@ -200,7 +198,7 @@ class VideoCameraControl extends React.Component {
             url="https://vimeo.com/1043489560"
             className="react-player"
             playing={this.state.playing}
-            id="vemoVideo"
+            id="vimeoVideo"
             style={{
               position: 'relative',
               zIndex: this.state.isToggled ? 1500 : 1000,        // Toggle z-index to match the container
