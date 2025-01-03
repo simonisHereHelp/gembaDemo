@@ -46,39 +46,28 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'sidebarA',
             position: 'left',
-            label: 'Take Photos▶️',
-            className: 'navbar-left',
+            label: 'Take Photos',
+            className: 'navbar-prime',
           },
           {
             to: 'myphotos',
             position: 'left',
-            label: 'Get Certified📂',
-            className: 'navbar-left',
+            label: 'Get Certified',
+            className: 'navbar-prime',
           },
           {
             to: 'my-wallet',
             position: 'left',
-            label: 'My Certs Wallet🌠',
-            className: 'navbar-left',
+            label: 'My Certs Wallet',
+            className: 'navbar-prime',
           },
           {
-            type: 'dropdown',
-            label: 'Cheat Sheets⚙️',
+            type: 'docSidebar',
+            sidebarId: 'sidebarB',
+            label: 'Cheat Sheets',
             position: 'right',
-            items: [
-              {
-                type: 'doc',
-                docId: 'avoid-these-errors',
-                label: 'Avoid These Errors',
-              },
-              {
-                type: 'doc',
-                docId: 'wi2/scope',
-                label: 'Choice of Adapters⚙️',
-              },
-            ],
             className: 'navbar-left',
           },
           {
@@ -102,12 +91,12 @@ const config = {
             className: 'navbar-right',
           },
           {
-            type: 'doc',
-            docId: 'pricing', // Updated route
-            label: 'Service',
+            type: 'docSidebar',
+            sidebarId: 'sidebarC',
+            label: 'Validation',
             position: 'right',
             className: 'navbar-right',
-          }
+          },
         ],
       },
       prism: {

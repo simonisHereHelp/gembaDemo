@@ -3,7 +3,7 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
-  tutorialSidebar: [
+  sidebarA: [
     {
       type: 'category',
       label: 'Video 7.1▶️',
@@ -18,7 +18,6 @@ const sidebars = {
       collapsed: true,
     },
     
-    // Category for Video 7.2 with s721 to s727
     {
       type: 'category',
       label: 'Video 7.2▶️',
@@ -51,9 +50,30 @@ const sidebars = {
       ],
       collapsed: true,
     },
-    'avoid-these-errors',
+    'about-this-video',
     'wi2/scope',
-  ]
+  ],
+  sidebarB: [
+  'avoid-these-errors',
+  'wi2/scope',
+  {
+    type: 'link',
+    label: 'Gallery',
+    href: '/gallery', // Adjust this path if necessary based on your site structure.
+  },
+
+  ],
+  sidebarC: [
+    'validate/validate-video',
+    'validate/validate-kiosk',
+    {
+      type: 'category',
+      label: 'About Our Work',
+      items: [
+        'scope-of-work',
+        'our-workflow',
+      ]},
+    ],
 };
 
 export default sidebars;
