@@ -1,21 +1,16 @@
-## My Certificates Wallet
+## My Certificates
 
-**Why Include Digital Certificates in Your Resume?**  
-Digital Certificates are portable and immutable. They cannot be altered or removed even if change of employment.  
+![alt text](image.png)
 
-- **Proof of Skills**: matery of complex SOP procedures.  
-- **Career Growth**: prequalifies you for similar roles and tasks  
-- **Professional Presentation**: enhances overall appearance of your resume.  
+**Certificate: Coaxial Soldering and Assembly**
 
-### Work Photos
-Latest practice photos
-
-| **Upload Time**         | **SOP Procedure ID** | **Result**  |
-|--------------------------|----------------------|-------------|
-| 2024-04-15 09:32 AM      | SOP-1001            | Pass        |
-| 2024-04-16 02:45 PM      | SOP-1001            | No Pass     |
-| 2024-04-18 11:00 AM      | SOP-1002            | Pending     |
-| 2024-04-20 04:15 PM      | SOP-1003            | Pass        |
+**Skills Acquired:**
+```
+- Soldering of micro-coaxial cables using a microscope
+- Assembling and adjusting microcomponents in a controlled environment
+- Applying solder paste and preparing conductors with precision
+- Conducting thorough inspections to meet quality standards
+```
 
 ---
 
