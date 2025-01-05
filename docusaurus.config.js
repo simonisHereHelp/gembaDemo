@@ -73,20 +73,20 @@ const config = {
           {
             type: 'doc',
             docId: 'aboutProject/aboutUs/contactInfo',
-            label: 'Talk to Tutor🙍🏽‍♂️',
+            label: 'Talk to Tutor',
             position: 'right',
             className: 'navbar-left',
           },
           {
             to: 'goodbye',
             position: 'left',
-            label: 'Exit⏫',
+            label: '-Exit-',
             className: 'navbar-left',
           },
           {
             type: 'doc',
             docId: 'pricing', // Updated route
-            label: 'Pricing⚙️',
+            label: 'Pricing',
             position: 'right',
             className: 'navbar-right',
           },

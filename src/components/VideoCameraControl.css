@@ -1,4 +1,5 @@
 #ControlCenter {
+    position: relative;
     background-color: var(--ifm-color-primary-lightest); /* Light Blue */
     border-radius: 20px;
     height: 80vh;
@@ -32,10 +33,10 @@
     border-radius: 15px;
     border: none;
     overflow: hidden;
+    position: absolute;
 }
 
 #WebcamCenter.normal, #VideoCenter.toggled {
-    position: absolute;
     top: -4vh;               
     right: 2vw;
     width: auto;               /* Set the video width to fill the parent container */
@@ -52,7 +53,6 @@
 } 
 
 #WebcamCenter.toggled, #VideoCenter.normal {
-    position: absolute;
     left: 2vw;               /* Set 40px from the top */
     top: 2vh; 
     width: auto;               /* Set the video width to fill the parent container */
@@ -68,41 +68,10 @@
     transition: all 0.5s ease;
 } 
 
-#vimeoVideo.toggled {
+
+#webcam, #vimeoVideo {
     width: 100%;               /* Set the video width to fill the parent container */
     height: 100%;              /* Set the video height to fill the parent container */
-    max-width: 360px;           /* Normal max width */
-    max-height: 270px;          /* Normal max height */
-    object-fit: cover;          /* Maintain aspect ratio and fill the container */
-    overflow: hidden;           /* Ensure the content stays within the rounded corners */
-    transition: all 1.0s ease;
-}
-
-#vimeoVideo.normal {
-    width: 100%;               /* Set the video width to fill the parent container */
-    height: 100%;              /* Set the video height to fill the parent container */
-    object-fit: cover;          /* Maintain aspect ratio and fill the container */
-    overflow: hidden;           /* Ensure the content stays within the rounded corners */
-    transition: all 1.0s ease;
-}
-
-/* Video element classes for different states */
-#webcam.normal {
-    width: 100%;               /* Set the video width to fill the parent container */
-    height: 100%;              /* Set the video height to fill the parent container */
-    max-width: 450px;           /* Normal max width */
-    max-height: 300px;          /* Normal max height */
-    object-fit: cover;          /* Maintain aspect ratio and fill the container */
-    overflow: hidden;           /* Ensure the content stays within the rounded corners */
-    transition: all 1.0s ease;
-}
-
-#webcam.toggled {
-    width: 100%;               /* Set the video width to fill the parent container */
-    height: auto;              /* Set the video height to fill the parent container */
-    object-fit: cover;          /* Maintain aspect ratio and fill the container */
-    overflow: hidden;           /* Ensure the content stays within the rounded corners */
-    transition: all 1.0s ease;
 }
 
 
