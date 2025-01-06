@@ -57,8 +57,9 @@
     top: 2vh; 
     width: auto;               /* Set the video width to fill the parent container */
     height: 80%;              /* Set the video height to fill the parent container */
-    max-width: 960px;           /* Toggled max width */
+    max-width: 1280px;           /* Toggled max width */
     max-height: 720px;          /* Toggled max height */
+    object-fit: cover;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -97,7 +98,7 @@
     left: 2vw;
     font-size: 20px;
     color: white;
-    background-color: var(--ifm-color-primary-light); /* Dark Slate Blue */
+    background-color: grey; /* Dark Slate Blue */
     padding: 10px 25px;
     border-radius: 10px;
     z-index: 1001; /* Ensure it is above other elements */
