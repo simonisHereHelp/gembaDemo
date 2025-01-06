@@ -198,10 +198,11 @@ class VideoCameraControl extends React.Component {
             url="https://vimeo.com/1043489560"
             className="react-player"
             playing={this.state.playing}
-            id="vimeoVideo"
+            width="100%"
+            height="100%"
             style={{
               position: 'relative',
-              zIndex: this.state.isToggled ? 1500 : 1000,        // Toggle z-index to match the container
+              zIndex: this.state.isToggled ? 1000 : 1002,        // Toggle z-index to match the container
             }}
             controls={false}  // Disable default controls
             onProgress={this.handleProgress}  // Track progress to stop at endTime

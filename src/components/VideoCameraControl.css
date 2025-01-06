@@ -1,18 +1,16 @@
 #ControlCenter {
-    position: relative;
-    background-color: var(--ifm-color-primary-lightest); /* Light Blue */
-    border-radius: 20px;
-    height: 80vh;
-    width: 75vw;
+    background-color: val(--ifm-color-primary-darkest); /* Light Blue */
+    width: 78vw;
+    height: 85vh;
     position: fixed;
     right: 0vw;
-    bottom: 0vh;
+    bottom: 5vh;
     z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     flex-direction: row;
-    padding: 10px 10px;
+    padding: 10px;
     box-sizing: border-box;
     border: none;
     transition: all 0.5s ease; /* Smooth transition between hidden and visible states */
@@ -27,39 +25,57 @@
     display: flex; /* Display the ControlCenter when 'normal' is applied */
 }
 
-#VideoCenter, #WebcamCenter {
-    background-color:var(--ifm-color-primary-lightest);  /* Set the background color to grey */
+#VideoCenter {
+    background-color: grey;  /* Set the background color to grey */
     position: relative;
     border-radius: 15px;
     border: none;
     overflow: hidden;
-    position: absolute;
+    transition: all 0.5s ease; /* Smooth transition between states */
 }
 
-#WebcamCenter.normal, #VideoCenter.toggled {
-    top: -4vh;               
-    right: 2vw;
-    width: auto;               /* Set the video width to fill the parent container */
-    height: 80%;              /* Set the video height to fill the parent container */
-    max-width: 360px;           /* Normal max width */
-    max-height: 270px;          /* Normal max height */
+/* Normal and toggled styles for VideoCenter */
+#VideoCenter.normal {
+    left: 0vw;               /* Set 40px from the top */
+    top: 2vh; 
+    width: 900px;
+    height: 600px;
+    z-index: 1000;
+    border: 3px solid #838382; 
+}
+
+#VideoCenter.toggled {
+    position: absolute;
+    top: -2vh;               /* Set 40px from the top */
+    right: 0vw; 
+    width: 360px;
+    height: 240px;
+    z-index: 1500;
+    border: 3px solid #fdfdbe; 
+}
+
+/* Normal and toggled styles for WebcamCenter */
+#WebcamCenter.normal {
+    position: absolute;
+    top: -2vh;
+    right: 0vw;
+    width: 360px;
+    height: 240px;
     z-index: 1002;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border: none;
     overflow: hidden;
     transition: all 0.5s ease;
-    border: 3px solid #ffffff;
-} 
+}
 
-#WebcamCenter.toggled, #VideoCenter.normal {
-    left: 2vw;               /* Set 40px from the top */
-    top: 2vh; 
-    width: auto;               /* Set the video width to fill the parent container */
-    height: 80%;              /* Set the video height to fill the parent container */
-    max-width: 1280px;           /* Toggled max width */
-    max-height: 720px;          /* Toggled max height */
-    object-fit: cover;
+#WebcamCenter.toggled {
+    position: absolute;
+    top: 2vh;
+    left: 0.5vw;
+    width: 900px;
+    height: 600px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -67,38 +83,91 @@
     border: none;
     overflow: hidden;
     transition: all 0.5s ease;
-} 
-
-
-#webcam, #vimeoVideo {
-    width: 100%;               /* Set the video width to fill the parent container */
-    height: 100%;              /* Set the video height to fill the parent container */
 }
 
+/* Video element classes for different states */
+#webcam.normal {
+    width: 100%;               /* Set the video width to fill the parent container */
+    height: 100%;              /* Set the video height to fill the parent container */
+    max-width: 450px;           /* Normal max width */
+    max-height: 300px;          /* Normal max height */
+    object-fit: cover;          /* Maintain aspect ratio and fill the container */
+    border-radius: 15px;        /* Border radius for rounded corners */
+    overflow: hidden;           /* Ensure the content stays within the rounded corners */
+    border: 3px solid #fdfdbe; 
+    transition: all 1.0s ease;
+
+}
+
+#webcam.toggled {
+    width: 900px;               /* Set the video width to fill the parent container */
+    height: 600px;              /* Set the video height to fill the parent container */
+    max-width: 900px;           /* Toggled max width */
+    max-height: 600px;          /* Toggled max height */
+    object-fit: cover;          /* Maintain aspect ratio and fill the container */
+    border-radius: 15px;        /* Border radius for rounded corners */
+    overflow: hidden;           /* Ensure the content stays within the rounded corners */
+    border: 3px solid #838382; 
+    transition: all 1.0s ease;
+}
+
+#ButtonsContainer {
+    position: absolute;
+    bottom: 0.5vh;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1001;
+    border: none;
+}
+
+button {
+    flex: 1; /* Make buttons equal in width */
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    background-color: #4F647B; /* Dark Slate Blue */
+    color: rgb(248, 229, 152);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 0 40px;
+    height: 7vh; /* Increase the height by 50% */
+}
+
+button:last-child {
+    margin-right: 0; /* Remove right margin for the last button */
+}
+
+button:last-child {
+    margin-right: 0; /* Remove right margin for the last button */
+}
 
 .launcher {
     position: relative;
-    width: 75%;
-    height: 60%;
+    width: 100%;
+    height: 100%;
 }
 
 .launcher::before {
-
-    z-index: 0; /* Establish a stacking context */
     content: '';
     position: absolute;
-    bottom: 0;
-    right: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6; /* Set the opacity to 0.6 for just the background */
     z-index: -1; /* Ensure the background is behind the content */
 }
 
 #Timer-Board {
     position: absolute;
-    top: -4vh;
+    top: -2vh;
     left: 2vw;
     font-size: 20px;
     color: white;
-    background-color: grey; /* Dark Slate Blue */
+    background-color: #4F647B; /* Dark Slate Blue */
     padding: 10px 25px;
     border-radius: 10px;
     z-index: 1001; /* Ensure it is above other elements */

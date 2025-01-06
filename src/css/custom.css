@@ -31,8 +31,8 @@
 
 #primaryButtonsContainer {
   position: absolute;
-  bottom: 0.5vh;
-  width: 80%;
+  bottom: -4.5vh;
+  width: 75%;
   display: flex;
   justify-content: space-between;
   z-index: 1001;
