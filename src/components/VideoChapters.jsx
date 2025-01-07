@@ -10,6 +10,7 @@ const VideoChapters = ({ }) => {
     initialized, setInitialized, 
     isToggled, setIsToggled, 
     chapterId, setChapterId,
+    topCam
   } = useContext(GlobalPhotoContext);
   
   const [startTime, setStartTime] = useState(null);
@@ -57,6 +58,7 @@ const VideoChapters = ({ }) => {
           setInitialized={setInitialized}  // Pass setter for initialized
           isToggled={isToggled}  // Pass global isToggled state
           setIsToggled={setIsToggled}
+          topCam={topCam}     // Add topCam
         />
       ) : null}
     </>

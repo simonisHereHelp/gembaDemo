@@ -69,8 +69,16 @@ class VideoCameraControl extends React.Component {
   }
 
   startWebcam = async () => {
+    const { topCam } = this.props; // Access topCam from props
+    if (!topCam) {
+      window.location.href = '/setupWebcam'
+      return;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: topCam } },
+      });
       if (this.webcamRef.current) {
         this.webcamRef.current.srcObject = stream;
       }
@@ -247,6 +255,13 @@ class VideoCameraControl extends React.Component {
                   {this.state.playing ? 'Pause' : 'Play'}
                 </button>
               )}
+
+              {/* Change Camera */}
+              <button className="primaryButton"
+              onClick={() => (window.location.href = '/setupWebcam')} >
+                 ⚙ 
+              </button>
+
         </div>
       </div>
       

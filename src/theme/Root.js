@@ -24,6 +24,8 @@ const Root = ({ children }) => {
   const [isFlipped, setIsFlipped] = useState(false); // State for flip animation
   const isVideoMode = location.pathname.startsWith('/docs/prov'); // Check if in video mode
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
+  const [faceCam, setFaceCam] = useState(null);
+  const [topCam, setTopCam] = useState(null);
 
   // Lazy initialization of audio object to avoid SSR issues
   useEffect(() => {
@@ -87,6 +89,8 @@ const Root = ({ children }) => {
       chapterId, setChapterId,
       loginName, setLoginName,
       loginReturnLoc, setLoginReturnLoc,
+      faceCam, setFaceCam,  // Add faceCam
+      topCam, setTopCam     // Add topCam
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 

@@ -38,7 +38,7 @@ const FaceDetection = () => {
   const [detectionComplete, setDetectionComplete] = useState(false);
   const videoRef = useRef(null);
   const history = useHistory();
-  const { loginName, setLoginName, loginReturnLoc } = useContext(GlobalPhotoContext);
+  const { loginName, setLoginName, loginReturnLoc, faceCam } = useContext(GlobalPhotoContext);
   const threshold = 0.7;
   let isPredicting = false;
 
@@ -54,6 +54,12 @@ const FaceDetection = () => {
 
   useEffect(() => {
     const loadFaceDetector = async () => {
+
+      if (!faceCam) {
+        history.push('/setupWebcam');
+        return;
+      }
+
       try {
         const bottomNav = document.querySelector('.bottom-nav-menu');
         if (bottomNav) {
@@ -67,7 +73,7 @@ const FaceDetection = () => {
     };
 
     loadFaceDetector();
-  }, []);
+  }, [faceCam, history]);
 
   useEffect(() => {
     if (faceDetector) {
@@ -84,7 +90,9 @@ const FaceDetection = () => {
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: faceCam } }, // Use faceCam for video stream
+      });
       video.srcObject = stream;
       video.onloadedmetadata = () => {
         video.play();
@@ -163,6 +171,7 @@ const FaceDetection = () => {
         <section id="webvideo" className="faceCam-view">
           <h2></h2>
           <h2>Initializing Webcam...</h2>
+          {faceCam && <p>(device: {faceCam})</p>}
           <div className="video-container">
             <video
               id="webcam"
