@@ -71,9 +71,9 @@ const config = {
             className: 'navbar-left',
           },
           {
-            type: 'doc',
-            docId: 'aboutProject/aboutUs/contactInfo',
-            label: 'Talk to Tutor',
+            type: 'docSidebar',
+            sidebarId: 'sidebarD',
+            label: 'Help',
             position: 'right',
             className: 'navbar-left',
           },

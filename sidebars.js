@@ -74,6 +74,23 @@ const sidebars = {
         'our-workflow',
       ]},
     ],
+  sidebarD: [
+    {
+      type: 'doc',
+      id: 'aboutProject/aboutUs/contactInfo', // Path to the document in your docs folder
+      label: 'Talk to Tutor', // Display name for the link
+    },
+    {
+      type: 'link',
+      label: 'Access My Screen (allow Live)', // Label for the link
+      href: '/remoteAccess', // Path to the remoteAccess page
+    },
+    {
+      type: 'link',
+      label: 'Set Up Cameras', // Label for the link
+      href: '/setupWebcam', // Path to the SetupWebcam page
+    },
+      ],
 };
 
 export default sidebars;
