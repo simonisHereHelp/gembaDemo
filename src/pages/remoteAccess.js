@@ -38,6 +38,8 @@ Your Support Team
     <p>Hi,</p>
     <p>A user has sent the following Remote Access code:</p>
     <p><strong>${remoteAccessCode}</strong></p>
+    <p></p>
+    <p>Access URL: <a href="https://remotedesktop.google.com/support/" target="_blank">https://remotedesktop.google.com/support/</a></p>
     <p>Best regards,<br>Your Support Team</p>
   `;
 
@@ -132,7 +134,7 @@ Your Support Team
 
         {/* Response Message Section */}
         {responseMessage && (
-          <div style={{ marginTop: '100px' }}>
+          <div style={{ marginTop: '2px' }}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{responseMessage}</ReactMarkdown>
           </div>
         )}
