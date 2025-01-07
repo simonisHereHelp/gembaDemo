@@ -171,7 +171,7 @@ const FaceDetection = () => {
         <section id="webvideo" className="faceCam-view">
           <h2></h2>
           <h2>Initializing Webcam...</h2>
-          {faceCam && <p>(device: {faceCam})</p>}
+          {faceCam && <p>(device seq #: {faceCam.slice(0, 5)})</p>}
           <div className="video-container">
             <video
               id="webcam"

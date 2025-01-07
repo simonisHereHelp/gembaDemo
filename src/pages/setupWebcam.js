@@ -8,16 +8,13 @@ const WebcamSetup = () => {
   const [devices, setDevices] = useState([]);
   const [cameraMappings, setCameraMappings] = useState({});
   const videoRefs = useRef([]);
-  const { setFaceCam, setTopCam } = useContext(GlobalPhotoContext);
-  const [faceCam, setLocalFaceCam] = useState(localStorage.getItem('faceCam') || "none");
-  const [topCam, setLocalTopCam] = useState(localStorage.getItem('topCam') || "none");
-  const [microCam, setLocalMicroCam] = useState(localStorage.getItem('microCam') || "none");
+  const { faceCam, topCam, microCam, setFaceCam, setTopCam, setMicroCam } = useContext(GlobalPhotoContext);
 
   const getMarkdownContent = () => `
 | **Camera**         | **1 - Face Camera**                     | **2 - Benchtop Camera**               | **3 - Microscope Camera**               |
 |---------------------|-----------------------------------------|---------------------------------------|-----------------------------------------|
 | **Function**        | For login, ensures seamless recognition | Capture practice work photos, top view | Capture detailed microscope images       |
-| **LocalStorage**    | ${faceCam.slice(0, 5)}                | ${topCam.slice(0, 5)}                | ${microCam.slice(0,5)}                |
+| **LocalStorage**    | ${faceCam?.slice(0, 5) || 'none'}       | ${topCam?.slice(0, 5) || 'none'}       | ${microCam?.slice(0,5) || 'none'}       |
 `;
 
   useEffect(() => {
@@ -60,20 +57,26 @@ const WebcamSetup = () => {
       [deviceId]: mapping,
     };
     setCameraMappings(updatedMappings);
-    localStorage.setItem('cameraMappings', JSON.stringify(updatedMappings));
 
-    if (mapping === '1') {
-      setLocalFaceCam(deviceId);
-      localStorage.setItem('faceCam', deviceId);
-      setFaceCam(deviceId); // Update global state
-    } else if (mapping === '2') {
-      setLocalTopCam(deviceId);
-      localStorage.setItem('topCam', deviceId);
-      setTopCam(deviceId); // Update global state
-    } else if (mapping === '3') {
-      setLocalMicroCam(deviceId);
-      localStorage.setItem('microCam', deviceId);
+    // Save all devices to localStorage based on mapping
+    const newCameraMap = {};
+    for (const [id, func] of Object.entries(updatedMappings)) {
+      if (func === '1') {
+        newCameraMap.faceCam = id;
+        setFaceCam(id);
+      } else if (func === '2') {
+        newCameraMap.topCam = id;
+        setTopCam(id);
+      } else if (func === '3') {
+        newCameraMap.microCam = id;
+        setMicroCam(id);
+      }
     }
+
+    localStorage.setItem('cameraMappings', JSON.stringify(updatedMappings));
+    localStorage.setItem('faceCam', newCameraMap.faceCam || 'none');
+    localStorage.setItem('topCam', newCameraMap.topCam || 'none');
+    localStorage.setItem('microCam', newCameraMap.microCam || 'none');
   };
 
   return (
@@ -103,14 +106,14 @@ const WebcamSetup = () => {
                 }}
               ></video>
               <div style={{ flex: 1 }}>
-              <p style={{ fontWeight: 'bold', margin: '5px 0' }}>
-                {device.label.length > 50
-                  ? `${device.label.slice(0, 50)}...`
-                  : device.label}
-              </p>
-              <p style={{ fontWeight: 'normal' }}>
-                {device.deviceId.slice(0, 5)}.
-              </p>
+                <p style={{ fontWeight: 'bold', margin: '5px 0' }}>
+                  {device.label.length > 50
+                    ? `${device.label.slice(0, 50)}...`
+                    : device.label}
+                </p>
+                <p style={{ fontWeight: 'normal' }}>
+                device seq #: {device.deviceId.slice(0, 5)}
+                </p>
                 <select
                   onChange={(e) => handleMappingChange(device.deviceId, e.target.value)}
                   style={{

@@ -26,6 +26,29 @@ const Root = ({ children }) => {
   const isPreVideoMode = previousLocation?.startsWith('/docs/prov'); // Check if the previous location was in video mode
   const [faceCam, setFaceCam] = useState(null);
   const [topCam, setTopCam] = useState(null);
+  const [microCam, setMicroCam] = useState(null);
+
+  const initializeLocalStored = () => {
+    // Retrieve values from localStorage
+    const storedFaceCam = localStorage.getItem('faceCam') || 'none';
+    const storedTopCam = localStorage.getItem('topCam') || 'none';
+    const storedMicroCam = localStorage.getItem('microCam') || 'none';
+
+    // Update global states
+    setFaceCam(storedFaceCam);
+    setTopCam(storedTopCam);
+    setMicroCam(storedMicroCam);
+
+    console.log('Initialized from localStorage:', {
+      faceCam: storedFaceCam,
+      topCam: storedTopCam,
+      microCam: storedMicroCam,
+    });
+  };
+
+  useEffect(() => {
+    initializeLocalStored();
+  }, []);
 
   // Lazy initialization of audio object to avoid SSR issues
   useEffect(() => {
@@ -64,6 +87,10 @@ const Root = ({ children }) => {
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);
   
+  useEffect(() => {
+    initializeLocalStored(); // Initialize global state from localStorage
+  }, [initializeLocalStored]);
+
   const handleIconClick = () => {
     if (swishAudio.current) {
       swishAudio.current.currentTime = 0; // Reset sound
@@ -90,7 +117,8 @@ const Root = ({ children }) => {
       loginName, setLoginName,
       loginReturnLoc, setLoginReturnLoc,
       faceCam, setFaceCam,  // Add faceCam
-      topCam, setTopCam     // Add topCam
+      topCam, setTopCam,
+      microCam,setMicroCam,
       }}>
       {chapterId !== null && isVideoMode && (
         <VideoChapters/> 
