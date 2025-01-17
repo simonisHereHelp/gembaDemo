@@ -108,7 +108,7 @@ ${savedPhotos
       });
 
       try {
-        const response = await fetch('https://provisio-post0924-mailserver.onrender.com/sendInviteEmail', {
+        const response = await fetch('https://project-marco-mailserver.vercel.app/sendInviteEmail', {
           method: 'POST',
           body: formData,
         });
