@@ -6,6 +6,23 @@ const sidebars = {
   sidebarA: [
     {
       type: 'category',
+      label: 'Live Instructions',
+      items: [
+        {
+          type: 'link',
+          label: 'Section A', // Label for the link
+          href: '/remoteAccess', // Path to the remoteAccess page
+        },
+        {
+          type: 'link',
+          label: 'Section B', // Label for the link
+          href: '/setupWebcam', // Path to the SetupWebcam page
+        },
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
       label: 'Video 7.1▶️',
       items: [
         'prov1',

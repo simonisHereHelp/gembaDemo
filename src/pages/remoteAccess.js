@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Layout from '@theme/Layout';
 import remoteAccessImg from '@site/static/img/remoteAccess.png';
+import RemoteAccessPasteIcon from '@site/static/img/RemoteAccess_paste.png'; // Self-hosted paste icon
 
 const RemoteAccess = () => {
   const [remoteAccessCode, setRemoteAccessCode] = useState('');
@@ -14,9 +15,25 @@ Follow these steps to get live support from our technicians:
 | **Step** | **Action**                                |
 |----------|------------------------------------------|
 | **1**    | Click the "Generate Code".               |
-| **2**    | Get the 9-digit Access Code.             |
+| **2**    | Get the 12-digit Access Code.             |
 | **3**    | Click "Invite Now".                      |
 `;
+
+const handlePasteCode = async () => {
+  try {
+    const copiedText = await navigator.clipboard.readText();
+    
+    // Check if copiedText is exactly 12 digits (numeric only)
+    if (/^\d{12}$/.test(copiedText)) {
+      setRemoteAccessCode(copiedText);
+    } else {
+      alert("Invalid Access Code. Please copy a valid 12-digit code.");
+    }
+  } catch (error) {
+    alert("Failed to paste. Please allow clipboard access.");
+  }
+};
+
 
 const handleSendEmail = async () => {
   if (!remoteAccessCode) {
@@ -24,7 +41,8 @@ const handleSendEmail = async () => {
     return;
   }
 
-  const recipientEmail = 'presenter.simon@gmail.com';
+  const recipient = 'presenter.simon@gmail.com';
+
   const plainBody = `
 Hi,
 
@@ -37,7 +55,12 @@ Your Support Team
   const htmlBody = `
     <p>Hi,</p>
     <p>A user has sent the following Remote Access code:</p>
-    <p><strong>${remoteAccessCode}</strong></p>
+    <p>
+      <strong>${remoteAccessCode}</strong>
+      <a href="#" onclick="navigator.clipboard.writeText('${remoteAccessCode}'); alert('Copied!'); return false;">
+        <img src="https://demo.ishere.help/img/RemoteAccess_copy.png"  alt="Copy Code" width="20" height="20" style="cursor: pointer; vertical-align: middle;" />
+      </a>
+    </p>
     <p></p>
     <p>Access URL: <a href="https://remotedesktop.google.com/support/" target="_blank">https://remotedesktop.google.com/support/</a></p>
     <p>Best regards,<br>Your Support Team</p>
@@ -45,18 +68,18 @@ Your Support Team
 
   try {
     const formData = new FormData();
-    formData.append('recipients', recipientEmail);
+    formData.append('recipients', recipient);
     formData.append('subject', `A user has sent a Remote Access Code`);
     formData.append('plain_body', plainBody);
-    formData.append('html_body', htmlBody); // Add the missing html_body field
+    formData.append('html_body', htmlBody);
 
-    const response = await fetch('https://provisio-post0924-mailserver.onrender.com/sendInviteEmail', {
+    const response = await fetch('https://project-marco-mailserver.vercel.app/sendInviteEmail', {
       method: 'POST',
       body: formData,
     });
 
     if (response.ok) {
-      setResponseMessage('| **Status** | **Message** |\n|-----------|--------------------------------|\n| ✅ | Request sent successfully to: ' + recipientEmail + ' |');
+      setResponseMessage('| **Status** | **Message** |\n|-----------|--------------------------------|\n| ✅ | Request sent successfully to: ' + recipient + ' |');
     } else {
       const errorText = await response.text();
       setResponseMessage('| **Status** | **Message** |\n|-----------|--------------------------------|\n| ❌ | Failed to send request. Error: ' + errorText + ' |');
@@ -65,6 +88,7 @@ Your Support Team
     setResponseMessage('| **Status** | **Message** |\n|-----------|--------------------------------|\n| ❌ | An error occurred. Please try again later. |');
   }
 };
+
 
   return (
     <Layout title="Remote Access" description="Get live support from technicians">
@@ -110,7 +134,7 @@ Your Support Team
                 type="text"
                 value={remoteAccessCode}
                 onChange={(e) => setRemoteAccessCode(e.target.value)}
-                placeholder="Paste the 9-digit Access Code."
+                placeholder="Paste the 12-digit Access Code."
                 className="primaryButton"
                 style={{
                   flex: 1,
@@ -120,6 +144,13 @@ Your Support Team
                   backgroundColor: '#fff', // White background
                   color: '#000', // Black text
                 }}
+              />
+              <img
+                  src={RemoteAccessPasteIcon}
+                  alt="Paste Code"
+                  onClick={handlePasteCode}
+                  style={{ width: '24px', height: '24px', cursor: 'pointer' }}
+                  title="Paste Code"
               />
             </div>
 
