@@ -83,20 +83,20 @@ const config = {
             label: '-Exit-',
             className: 'navbar-left',
           },
-          {
-            type: 'doc',
-            docId: 'pricing', // Updated route
-            label: 'Pricing',
-            position: 'right',
-            className: 'navbar-right',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'sidebarC',
-            label: 'Validation',
-            position: 'right',
-            className: 'navbar-right',
-          },
+          // {
+          //   type: 'doc',
+          //   docId: 'pricing', // Updated route
+          //   label: 'Pricing',
+          //   position: 'right',
+          //   className: 'navbar-right',
+          // },
+          // {
+          //   type: 'docSidebar',
+          //   sidebarId: 'sidebarC',
+          //   label: 'Validation',
+          //   position: 'right',
+          //   className: 'navbar-right',
+          // },
         ],
       },
       prism: {

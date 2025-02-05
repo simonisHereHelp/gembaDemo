@@ -36,19 +36,20 @@ const FaceDetection = () => {
   const [counterFail, setCounterFail] = useState(0);
   const [faceDetector, setFaceDetector] = useState(null);
   const [detectionComplete, setDetectionComplete] = useState(false);
-  const [livenessTF, setLivenessTF] = useState(false);
   const videoRef = useRef(null);
   const history = useHistory();
-  const { loginReturnLoc, loginName, setLoginName, faceCam } = useContext(GlobalPhotoContext);
+  const { loginName, setLoginName, loginReturnLoc, faceCam } = useContext(GlobalPhotoContext);
   const threshold = 0.7;
   let isPredicting = false;
-  const [errorDetected, setErrorDetected] = useState(false); // ✅ New error state
 
   const markdownTable = `
-  |          |                   |
-  |-------------------|----------------------------|
-  | **Face Camera**   | ${livenessTF ? "✅ Verified" : "❌ Not Detected"} |
-  | **Liveness Score** | ${counter > counterFail ? "Pass ✅" : "Fail ❌"} |
+  | Field       | Value                |
+  |------------------|------------------------------|
+  | Name        | ${loginName || "N/A"}. (other information here) |
+  | Onboard Date|  information ............ |
+  | Title       |             |
+  | Department  |        |
+  | Contact     |         |
   `;
 
   useEffect(() => {
@@ -131,7 +132,6 @@ const FaceDetection = () => {
       }
     } catch (error) {
       console.error("Error during prediction:", error);
-      setErrorDetected(true); // ✅ Set error if detection fails
     } finally {
       isPredicting = false;
       requestAnimationFrame(predictWebcam);
@@ -139,16 +139,9 @@ const FaceDetection = () => {
   };
 
   const handleButtonClick = () => {
-
-    if (videoRef.current) {
-      videoRef.current.pause(); // ⏸ Pause the video
-      videoRef.current.srcObject = null; // ❌ Remove video stream
-    }
-    
     const bottomNav = document.querySelector('.bottom-nav-menu');
     bottomNav.style.display = 'flex';
     if (loginReturnLoc) {
-      // history.push('/qr');
       history.push(loginReturnLoc);
     } else {
       history.push("/");
@@ -158,61 +151,50 @@ const FaceDetection = () => {
   useEffect(() => {
     const bottomNav = document.querySelector('.bottom-nav-menu');
     if (counter + counterFail >= 10) {
-      
-      // alternative path: remove setLoginName and go to Step 2 history.push (/qr)
       const randomId = loginName || `Operator #S${Math.floor(100 + Math.random() * 900)}`;
       setLoginName(counter > counterFail ? randomId : null);
-
-      setLivenessTF(counter > counterFail ? true : false);
       bottomNav.style.display = 'none'; // Hide the bottom nav menu
       setDetectionComplete(true);
+
       setTimeout(() => {
-        const button = document.querySelector('#jumpToNext'); // Select the button in the result section
+        const button = document.querySelector('#result button'); // Select the button in the result section
         if (button) {
           button.click(); // Programmatically trigger the button click
         }
       }, 2500);
     }
   }, [counter, counterFail]);
+
   return (
-    <Layout title="Liveness Detection" description="Step 1: Prevent Spoofing with a Live Test">
-      {/* 🔹 Step 1: Anti-Spoofing Liveness Detection */}
-      <div className="resultResult">
-        <h1>🛡 Step 1: Liveness Check</h1>
-        {!detectionComplete ? (
-          <>
-            <p>Look into the camera, do not use a photo.</p>
-            <div className="resultVideo">
-              <video id="resultVideo" autoPlay playsInline ref={videoRef} className="resultVideoElement"></video>
-              {faceCam && <p className="device-info">📷 Camera ID: {faceCam.slice(0, 5)}</p>}
-            </div>
-          </>
-        ) : (
-          <>
-            {/* 🔹 Transition to Step 2: QR Code Scan */}
-            <section className="resultSuccess">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
-              <button id="jumpToNext" className="resultButton" onClick={handleButtonClick}>
-                Back to Page →
-              </button>
-            </section>
-          </>
-        )}
-
-      {errorDetected && (
-          <div className="resultError">
-            <h3>❌ Error: Liveness Test Failed</h3>
-            <p>Could not detect a real person within the time limit.</p>
-            <button className="resultButton" onClick={() => history.push("/")}>
-              Return to Page
-            </button>
+    <Layout title="Log-In Detection" description="via FaceCam for seamless log-in">
+      {!detectionComplete ? (
+        <section id="webvideo" className="faceCam-view">
+          <h2></h2>
+          <h2>Initializing Webcam...</h2>
+          {faceCam && <p>(device seq #: {faceCam.slice(0, 5)})</p>}
+          <div className="video-container">
+            <video
+              id="webcam"
+              autoPlay
+              playsInline
+              ref={videoRef}
+              className="faceCam-video"
+            ></video>
           </div>
-        )}
-
-      </div>
+        </section>
+      ) : (
+        <section id="result" className="result-view">
+          <h3>{loginName ? `Login Successful` : "Login Unsuccessful"}</h3>
+          <h4>{loginName ? `User: ${loginName}` : "ID Not Found"}</h4>
+          <div style={{ width: '60%', margin: '0 auto' }}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownTable}</ReactMarkdown>
+          </div>
+          <p></p>
+          <button className="passiveButton" onClick={handleButtonClick}>return to previous page...</button>
+        </section>
+      )}
     </Layout>
   );
-
 };
 
 export default FaceDetection;

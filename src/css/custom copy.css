@@ -14,7 +14,6 @@
   --ifm-color-primary-lighter: #66b2ff; /* Even lighter blue */
   --ifm-color-primary-lightest: #bcd8f4; /* Lightest blue */
   --ifm-code-font-size: 95%;
-  --ifm-color-grey: #e1e1e1;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
@@ -27,7 +26,6 @@
   --ifm-color-primary-light: #80d4ff; /* Lighter blue for dark mode */
   --ifm-color-primary-lighter: #99e0ff; /* Even lighter blue for dark mode */
   --ifm-color-primary-lightest: #b3ecff; /* Lightest blue for dark mode */
-  --ifm-color-grey: #e1e1e1;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
@@ -47,7 +45,7 @@
   font-size: 1.2rem;
   background-color: var(--ifm-color-primary-dark); /* Dark Slate Blue */
   color: whitesmoke;
-  border: 2px solid grey; /* Add 2px white border */
+  border: none;
   border-radius: 30px;
   cursor: pointer;
   margin: 0 10px;
@@ -100,6 +98,31 @@ section {
   transition: opacity 500ms ease-in-out;
 }
 
+
+.faceCam-view {
+  position: absolute; /* Change from relative to absolute for centering */
+  top: 20%; /* Move to the middle vertically */
+  left: 50%; /* Move to the middle horizontally */
+  transform: translate(-50%, 0); /* Center the element by offsetting 50% of its width and height */
+  width: 40%;
+  margin: 0; /* Remove the margin as it's not needed for centering */
+  cursor: pointer;
+}
+
+.faceCam-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.faceCam-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 
 .bottom-nav-menu {
   position: fixed; /* Fixed position to stick to the viewport */
@@ -199,117 +222,21 @@ section {
 }
 
 
+.result-view img.flicker-badge {
+  max-width: 100px; /* Ensure the image is properly sized */
+  height: auto;
+  margin: 10px 0; /* Add spacing around the image */
+  position: relative; /* Positions the badge relative to other elements */
+}
+
+.flicker-badge {
+  animation: flicker 1.5s infinite; /* Flicker animation */
+}
+
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
 }
-.resultResult {
-  background: var(--ifm-color-grey);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 600px;
-  margin: 40px auto;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.resultResult h1 {
-  font-size: 24px;
-  color: var(--ifm-color-primary);
-  text-align: center;
-}
-
-.resultVideo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.resultVideoElement {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 8px;
-  border: 2px solid var(--ifm-color-primary);
-}
-
-.resultSuccess { 
-  margin-top: 20px;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  border: none;
-  text-align: center;  /* ✅ Ensures text inside is centered */
-  display: flex;
-  flex-direction: column;  /* ✅ Stack children vertically */
-  align-items: center;  /* ✅ Center-align children */
-  justify-content: center;  /* ✅ Center content */
-  width: fit-content;  /* ✅ Ensures content determines width */
-  margin-left: auto;
-  margin-right: auto;
-  opacity: 0;  /* Start as invisible */
-  transform: translateY(10px); /* Move slightly down */
-  animation: fadeIn 0.8s ease-out forwards; /* Smooth fade-in */
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.resultSuccess table { 
-  width: auto;  /* ✅ Makes table content size-dependent */
-  margin: 10px auto;  /* ✅ Center-aligns the table */
-  border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* ✅ Soft shadow effect */
-}
-
-.resultSuccess table th, 
-.resultSuccess table td { 
-  padding: 10px 15px;
-  border: 1px solid #ddd; /* ✅ Light gray border */
-}
-
-.resultButton {
-  margin-top: 15px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: var(--ifm-color-primary); /* ✅ Theme color */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-  display: block;
-  width: 100%;  /* ✅ Makes button full width */
-  max-width: 300px;  /* ✅ Keeps it a reasonable size */
-}
-
-.resultButton:hover {
-  background-color: var(--ifm-color-primary-dark);
-}
-
-
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .resultResult {
-    max-width: 90%;
-    padding: 15px;
-  }
-
-  .resultButton {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px;
-  }
-}
-
 
 /* Navbar customization */
 .navbar__items {
@@ -321,10 +248,10 @@ section {
 
 .navbar-left {
   background-color: rgb(255, 255, 255);
-  padding: 5px;
+  padding: 10px;
   text-align: center; /* Center-align text or inline elements */
-  border: none;
-  margin-right: 5px; /* Add spacing between items */
+  border-left: 1px solid grey; /* Add a grey left border */
+  margin-right: 10px; /* Add spacing between items */
 }
 
 .navbar-prime {

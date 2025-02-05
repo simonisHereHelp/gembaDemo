@@ -29,16 +29,19 @@ const Root = ({ children }) => {
   const [microCam, setMicroCam] = useState(null);
 
   const initializeLocalStored = () => {
-    // Retrieve values from localStorage
-    const storedFaceCam = localStorage.getItem('faceCam') || 'none';
-    const storedTopCam = localStorage.getItem('topCam') || 'none';
-    const storedMicroCam = localStorage.getItem('microCam') || 'none';
-
+    // Retrieve mappings from localStorage
+    const storedMappings = JSON.parse(localStorage.getItem('cameraMappings')) || {};
+  
+    // Extract individual camera mappings
+    const storedFaceCam = storedMappings[1] || 'none';
+    const storedTopCam = storedMappings[2] || 'none';
+    const storedMicroCam = storedMappings[3] || 'none';
+  
     // Update global states
     setFaceCam(storedFaceCam);
     setTopCam(storedTopCam);
     setMicroCam(storedMicroCam);
-
+  
     console.log('Initialized from localStorage:', {
       faceCam: storedFaceCam,
       topCam: storedTopCam,
