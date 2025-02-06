@@ -6,24 +6,29 @@ const sidebars = {
   sidebarA: [
     {
       type: 'category',
-      label: 'Live Instructions',
+      label: 'Live Training',
       items: [
-        {
-          type: 'link',
-          label: 'Section A', // Label for the link
-          href: '/remoteAccess', // Path to the remoteAccess page
+        { 
+          type: 'doc',
+          id: 'instructor_profile', 
+          label: 'Star Trainers' 
         },
         {
           type: 'link',
-          label: 'Section B', // Label for the link
-          href: '/setupWebcam', // Path to the SetupWebcam page
+          label: "M. Sullivan's Training", // Label for the link
+          href: '/remoteAccess_1', // Path to the remoteAccess page
+        },
+        {
+          type: 'link',
+          label: "L. Patel's Training", // Label for the link
+          href: '/remoteAccess_2', // Path to the remoteAccess page
         },
       ],
       collapsed: false,
     },
     {
       type: 'category',
-      label: 'Video 7.1▶️',
+      label: 'Session 7.1▶️',
       items: [
         'prov1',
         'prov2',
@@ -37,7 +42,7 @@ const sidebars = {
     
     {
       type: 'category',
-      label: 'Video 7.2▶️',
+      label: 'Session 7.2▶️',
       items: [
         'prov7',
         'prov8',
@@ -53,7 +58,7 @@ const sidebars = {
     // Category for Document with nested References category
     {
       type: 'category',
-      label: 'Document',
+      label: 'Training Materials',
       items: [
         'wi1/wi-71',
         'wi1/wi-72',

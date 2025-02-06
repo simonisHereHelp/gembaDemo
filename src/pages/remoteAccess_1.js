@@ -10,7 +10,7 @@ const RemoteAccess = () => {
   const [responseMessage, setResponseMessage] = useState('');
 
   const markdownContent = `
-Follow these steps to get live support from our technicians:
+Follow these steps to receive live, hands-on guidance from our trainers.:
 
 | **Step** | **Action**                                |
 |----------|------------------------------------------|
@@ -93,7 +93,7 @@ Your Support Team
   return (
     <Layout title="Remote Access" description="Get live support from technicians">
       <div style={{ maxWidth: '80%', margin: '0 auto', padding: '20px' }}>
-        <h2>Allow Live Access</h2>
+        <h2>Allow Trainer (M. Sullivan) to Access Your Screen</h2>
         <div
           style={{
             display: 'flex',

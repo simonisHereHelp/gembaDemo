@@ -38,9 +38,9 @@ const config = {
       // Replace with your project's social card
       image: 'img/favicon.ico',
       navbar: {
-        title: 'CertMe!',
+        title: 'Restricted Gemba',
         logo: {
-          alt: 'Provisio',
+          alt: 'Star Trainers',
           src: 'img/logo.svg',
         },
         items: [
@@ -48,40 +48,40 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'sidebarA',
             position: 'left',
-            label: 'Take Photos',
+            label: 'Trainers',
             className: 'navbar-prime',
           },
           {
             to: 'myphotos',
             position: 'left',
-            label: 'Get Certified',
+            label: 'On-Site Certification',
             className: 'navbar-prime',
           },
           {
             to: 'my-wallet',
             position: 'left',
-            label: 'My Certs Wallet',
+            label: 'Instructor Logs',
             className: 'navbar-prime',
           },
           {
             type: 'docSidebar',
             sidebarId: 'sidebarB',
-            label: 'Cheat Sheets',
+            label: 'Resources',
             position: 'right',
             className: 'navbar-left',
           },
           {
             type: 'docSidebar',
             sidebarId: 'sidebarD',
-            label: 'Help',
+            label: 'Support & Guidance',
             position: 'right',
             className: 'navbar-left',
           },
           {
             to: 'goodbye',
-            position: 'left',
-            label: '-Exit-',
-            className: 'navbar-left',
+            position: 'right',
+            label: 'End Training',
+            className: 'navbar-right',
           },
           // {
           //   type: 'doc',
