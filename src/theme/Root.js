@@ -104,7 +104,7 @@ const Root = ({ children }) => {
     setIsFlipped((prev) => !prev);
     setLoginReturnLoc(location.pathname);
     if (!loginName) {
-      history.push('/face');
+      history.push('/golive_room1');
     } else {
       history.push('/log-out-user');
     }
@@ -129,17 +129,18 @@ const Root = ({ children }) => {
       {children}
       <section>
       <div className={`bottom-nav-menu${isFlipped ? ' flip' : ''}`}>
-             <p>{loginName ? `User: ${loginName}` : 'No User Logged In'}</p>
-           <div
+             <p>{loginName ? `User: ${loginName}` : 'click to start'}</p>
+           
+           {!loginName && <div
              className="primaryButton center-align "
              onClick={handleIconClick}>
             <img
                src={loginName ? logoutIcon : loginIcon}
-               alt={loginName ? 'Log Out' : 'Log In'}
+               alt={loginName ? 'Share with Trainer' : 'Share Off'}
                className="nav-icon"
              />
-             {loginName ? 'Log Out' : 'Log In'}
-           </div>
+             {loginName ? 'Log Out' : 'Live Instruction'}
+           </div>}
          </div>
         </section>
     </GlobalPhotoContext.Provider>

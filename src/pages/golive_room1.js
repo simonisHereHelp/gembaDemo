@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import "./golive.css";
 import Layout from "@theme/Layout";
 import { GoliveMeetingStatus } from "../components/golive-meetingStatus";
 import Daily from "@daily-co/daily-js";
+import { GlobalPhotoContext } from "../theme/Root";
 
 const DAILY_API_KEY = "373a39750ce5b3f4d805c5b7dcfd84a661137ea513f3e748497805a7a0f8225b";
 
@@ -14,7 +15,8 @@ const GoLive = () => {
   const [meetingState, setMeetingState] = useState({ roomCreated: false, activeTime: "--", duration: "--" });
   const [isLive, setIsLive] = useState(false);
   const [interval, setInterval] = useState("");
-  const [showTable, setShowTable] = useState(false);
+  const { loginReturnLoc, loginName, setLoginName } = useContext(GlobalPhotoContext);
+  
   const [callInstance, setCallInstance] = useState(null);
 
   useEffect(() => {
@@ -91,6 +93,7 @@ const GoLive = () => {
   
         // Attach the trainer's video stream
         const mediaStream = new MediaStream();
+        setLoginName("Trainer XXX");
       if (trainerParticipant.videoTrack) {
         mediaStream.addTrack(trainerParticipant.videoTrack);
         console.log("📹 Video track attached.");
@@ -226,27 +229,19 @@ const GoLive = () => {
       };
       
 
-  const markdownTable = `
-  | ${trainerName} | Note |
-  |-------------------|----------------------------|
-  | **Session Ready?** | ${meetingState.roomCreated ? "✅" : "❌"} |
-  | **Active** | ${meetingState.activeTime} |
-  | **Duration** | ${meetingState.duration} |
-  `;
-
   return (
     <Layout title="Live Training" description="Live session started">
       {!isLive && (
         <div id="golive-waitingRoom">
 
-            <button id="goliveButton" className="primaryButton" onClick={handleGoLive}>
-              Start Live Session
+            <button id="goliveButton" onClick={handleGoLive}>
+            🎥
             </button>
         </div>
       )}
       {isLive && (
         <div id="golive-meetingRoom">
-          <h2>🎥 Live Meeting in Progress</h2>
+          <h2>🎥</h2>
         </div>
       )}
     </Layout>

@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import Layout from '@theme/Layout';
 import '../../static/img/isHereKV_small.png';
 import '../../static/img/3steps.png';
 
+
 const Index = () => {
-  const history = useHistory();
 
   useEffect(() => {
     if (!document.body.classList.contains('show-navbar')) {
@@ -22,7 +21,6 @@ const Index = () => {
         <p>Our service removes these barriers by delivering expert instruction remotely, providing live, hands-on training and certification without the need for security clearances. With real-time guidance, your team gains direct access to specialized expertise, ensuring precision, compliance, and operational excellence—right where the work happens.</p>
 
         <h2>🚀 Get Started</h2>
-=        <a className="primaryButton" href="/golive_room1">Get Started room 1</a>      
         </div>
     </Layout>
   );
