@@ -17,7 +17,7 @@ const GoLive = () => {
   const [interval, setInterval] = useState("");
   const { loginReturnLoc, loginName, setLoginName } = useContext(GlobalPhotoContext);
   const history = useHistory();
-  
+  const pushPath = "docs/wi1/wi-71"
   const [callInstance, setCallInstance] = useState(null);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const GoLive = () => {
       }
       trainerVideo.srcObject = mediaStream;
 
-      setTimeout(() => history.push("/docs/instructor_profile"), 500);
+      setTimeout(() => history.push(pushPath), 500);
 
 
       }
