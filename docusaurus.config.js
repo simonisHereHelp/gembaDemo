@@ -9,8 +9,8 @@ const config = {
   url: 'https://www.ishere.help/',
 
   baseUrl: '/',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'ishere.help', // Usually your GitHub org/user name.
+  projectName: 'on-site', // Usually your repo name.
 
   onBrokenLinks: 'log', // Change 'throw' to 'log' to avoid crashes on broken links
   onBrokenMarkdownLinks: 'warn',
@@ -42,7 +42,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/favicon.ico',
       navbar: {
-        title: 'Gemba Call',
+        title: 'Xperts On-Site',
         logo: {
           alt: 'Star Trainers',
           src: 'img/logo.svg',

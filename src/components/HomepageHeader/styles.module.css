@@ -47,8 +47,8 @@
 
 .HeaderTyper {
   color: var(--ifm-navbar-link-color);
-  font-size: var(--ifm-font-size-32);
-  font-weight: bold;
+  font-size: var(--ifm-font-size-24);
+  font-weight: normal;
   justify-content: center;
 
 }
