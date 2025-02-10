@@ -7,9 +7,10 @@ title: 7.2 Assembly of XXXX Components
 
 ### 7.2.1
 Insert a **confidentially-sized guide wire** through the distal end of the central lumen.
-
 ### 7.2.2
 Strip approximately **confidential length** of the proximal end of **part item XXX** outer jacket using a blade tool.
+
+![Example of micro-coaxial cable](./Step_A.jpg)
 
 ### 7.2.3
 Separate the outer shielding wires from the insulating layer by pulling off the insulator. Cut a portion of the outer shielding wires near the stripped edge of the outer jacket using wire cutters. Hold the remaining shielding wires with tweezers and twist them tightly by rotating the outer jacket with the opposite hand.
@@ -20,6 +21,7 @@ Strip the insulating layer of each colored **part item YYY** using a blade tool 
 ### 7.2.5
 Apply a thin layer of solder paste to the outer and center wires using a spatula. Tin the outer and center wires using a soldering system with a chisel tip set to **confidential temperature**.
 
+![Example of micro-coaxial cable](./Step_C.jpg)
 **Figure 3**: Example of part item XXX.
 
 ### 7.2.6

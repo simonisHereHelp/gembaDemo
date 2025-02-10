@@ -3,29 +3,7 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
-  sidebarA: [
-    {
-      type: 'category',
-      label: 'Live Training',
-      items: [
-        { 
-          type: 'doc',
-          id: 'instructor_profile', 
-          label: 'Star Trainers' 
-        },
-        {
-          type: 'link',
-          label: "M. Sullivan's Training", // Label for the link
-          href: '/remoteAccess_1', // Path to the remoteAccess page
-        },
-        {
-          type: 'link',
-          label: "L. Patel's Training", // Label for the link
-          href: '/remoteAccess_2', // Path to the remoteAccess page
-        },
-      ],
-      collapsed: false,
-    },
+  sidebarPractice: [
     {
       type: 'category',
       label: 'Session 7.1▶️',
@@ -54,29 +32,42 @@ const sidebars = {
       ],
       collapsed: true,
     },
-
     // Category for Document with nested References category
-    {
-      type: 'category',
-      label: 'Training Materials',
-      items: [
-        'wi1/wi-71',
-        'wi1/wi-72',
-        {
-          type: 'category',
-          label: 'References',
-          items: [
-            'wi2/min-0434-1',
-          ],
-        },
-      ],
-      collapsed: true,
-    },
-    'about-this-video',
     'wi2/scope',
   ],
-  sidebarB: [
-  'avoid-these-errors',
+  sidebarInstruct: [
+  {type: 'category',
+    label: 'Live Training',
+    items: [
+      { 
+        type: 'doc',
+        id: 'instructor_profile', 
+        label: 'Instructor' 
+      }
+    ],
+      collapsed: false
+   },
+  {
+    type: 'category',
+    label: 'Training Materials',
+    items: [
+      'wi1/wi-71',
+      'wi1/wi-72',
+      {
+        type: 'category',
+        label: 'References',
+        items: [
+          'wi2/min-0434-1',
+        ],
+      },
+    ],
+    collapsed: true,
+  },
+  {
+    type: 'doc',
+    label: 'Avoid These Errors', // Label for the link
+    id: 'avoid-these-errors', // Path to the document in your docs folder
+  },
   'wi2/scope',
   {
     type: 'link',

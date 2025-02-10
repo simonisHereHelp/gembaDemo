@@ -1,11 +1,8 @@
 import React, { useState } from 'react'; 
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Spacer from '@site/src/components/Spacer';
 import styles from './styles.module.css';
 import { TypeAnimation } from "react-type-animation";
-import { useHistory } from '@docusaurus/router';
 const HeaderView: React.FC = () => {
-  const { siteConfig } = useDocusaurusContext();
 
   return (
     <div

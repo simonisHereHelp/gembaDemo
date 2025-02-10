@@ -1,0 +1,47 @@
+@media screen and (max-width: 900px) {
+    .theme-doc-sidebar-container, /* Main sidebar */
+    .theme-doc-toc-mobile,       /* Mobile TOC */
+    .breadcrumbs {
+        display: none !important;
+    }
+  
+    /* If Docusaurus uses flexbox, force hide */
+    .theme-doc-sidebar-container {
+        visibility: hidden !important;
+        max-width: 0 !important;
+        overflow: hidden;
+    }
+  
+    .theme-doc-sidebar-item-link,
+    .navbar__link,
+    .menu__list-item {
+        font-size: var(--ifm-font-size-20) !important;
+        font-weight: bold !important;
+        color: var(--ifm-color-primary-darkest) !important;
+    }
+  
+    .navbar__search {
+      display: none !important;
+    }
+  }
+  
+  /* Ensure sidebar is visible on desktop */
+  @media screen and (min-width: 901px) {
+    .theme-doc-sidebar-container {
+        display: block !important;
+        visibility: visible !important;
+        max-width: initial !important;
+        overflow: visible !important;
+    }
+  
+    .breadcrumbs {
+        display: block !important;
+    }
+  }
+  
+  @media screen and (max-width: 900px) {
+    .theme-doc-main {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+  }

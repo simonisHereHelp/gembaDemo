@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "./golive.css";
 import Layout from "@theme/Layout";
 import { GoliveMeetingStatus } from "../components/golive-meetingStatus";
@@ -16,6 +16,7 @@ const GoLive = () => {
   const [isLive, setIsLive] = useState(false);
   const [interval, setInterval] = useState("");
   const { loginReturnLoc, loginName, setLoginName } = useContext(GlobalPhotoContext);
+  const history = useHistory();
   
   const [callInstance, setCallInstance] = useState(null);
 
@@ -105,6 +106,10 @@ const GoLive = () => {
         console.warn("⚠️ Trainer has no audio track.");
       }
       trainerVideo.srcObject = mediaStream;
+
+      setTimeout(() => history.push("/docs/instructor_profile"), 500);
+
+
       }
     };
   

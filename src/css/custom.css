@@ -6,16 +6,45 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #007bff; /* Primary blue */
-  --ifm-color-primary-dark: #0056b3; /* Darker blue */
-  --ifm-color-primary-darker: #004494; /* Even darker blue */
-  --ifm-color-primary-darkest: #003366; /* Darkest blue */
-  --ifm-color-primary-light: #339aff; /* Lighter blue */
-  --ifm-color-primary-lighter: #66b2ff; /* Even lighter blue */
-  --ifm-color-primary-lightest: #bcd8f4; /* Lightest blue */
+  --ifm-color-primary: #66ccff; /* Primary blue for dark mode */
+  --ifm-color-primary-dark: #3399ff; /* Darker blue for dark mode */
+  --ifm-color-primary-darker: #007acc; /* Even darker blue for dark mode */
+  --ifm-color-primary-darkest: #003b65; /* Darkest blue for dark mode */
+  --ifm-color-primary-light: #80d4ff; /* Lighter blue for dark mode */
+  --ifm-color-primary-lighter: #99e0ff; /* Even lighter blue for dark mode */
+  --ifm-color-primary-lightest: #b3ecff; /* Lightest blue for dark mode */
+  --ifm-color-grey: #52525242;
   --ifm-code-font-size: 95%;
-  --ifm-color-grey: #e1e1e1;
+  --ifm-color-primary-text-dark: #ffffff;
+  --ifm-container-width: 75vw;
+  --ifm-navbar-link-color: var(--ifm-color-primary-darkest);
+  --ifm-navbar-link-active-color: var(--ifm-color-primary-darker);
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+
+  --ifm-font-size-12: 0.75rem;
+  --ifm-font-size-14: 0.875rem;
+  --ifm-font-size-16: 1rem;
+  --ifm-font-size-18: 1.125rem;
+  --ifm-font-size-20: 1.25rem;
+  --ifm-font-size-24: 1.5rem;
+  --ifm-font-size-28: 1.75rem;
+  --ifm-font-size-30: 1.875rem;
+  --ifm-font-size-32: 2rem;
+  --ifm-font-size-36: 2.25rem;
+  --ifm-font-size-40: 2.5rem;
+  --ifm-font-size-48: 3rem;
+  --ifm-font-size-56: 3.5rem;
+  --ifm-font-size-64: 4rem;
+  --ifm-font-size-72: 4.5rem;
+
+  --ifm-font-size-small: var(--ifm-font-size-14);
+  --ifm-font-size-body: var(--ifm-font-size-16);
+  --ifm-font-size-large: var(--ifm-font-size-20);
+  --ifm-font-size-display: var(--ifm-font-size-48);
+  --ifm-font-size-display-small: var(--ifm-font-size-24);
+  --ifm-font-size-display-large: var(--ifm-font-size-72);
+
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -27,8 +56,9 @@
   --ifm-color-primary-light: #80d4ff; /* Lighter blue for dark mode */
   --ifm-color-primary-lighter: #99e0ff; /* Even lighter blue for dark mode */
   --ifm-color-primary-lightest: #b3ecff; /* Lightest blue for dark mode */
-  --ifm-color-grey: #e1e1e1;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-navbar-link-color: var(--ifm-color-primary-darkest);
+  --ifm-navbar-link-active-color:var(--ifm-color-primary-darker);
 }
 
 #primaryButtonsContainer {
@@ -232,7 +262,7 @@ section {
 }
 
 .resultResult h1 {
-  font-size: 24px;
+  font-size: 1.5 rem;
   color: var(--ifm-color-primary);
   text-align: center;
 }
@@ -296,7 +326,7 @@ section {
 .resultButton {
   margin-top: 15px;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 1 rem;
   background-color: var(--ifm-color-primary); /* ✅ Theme color */
   color: white;
   border: none;
@@ -310,22 +340,6 @@ section {
 
 .resultButton:hover {
   background-color: var(--ifm-color-primary-dark);
-}
-
-
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .resultResult {
-    max-width: 90%;
-    padding: 15px;
-  }
-
-  .resultButton {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px;
-  }
 }
 
 
@@ -388,3 +402,21 @@ th {
   background-color: #f2f2f2; /* Light gray background for headers */
 }
 
+.responsive-iframe {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px; /* Adjust max width as needed */
+  margin: 0 auto;
+  padding-top: 45%; /* Adjust to match aspect ratio */
+  position: relative;
+}
+
+.responsive-iframe iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

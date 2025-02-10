@@ -26,19 +26,23 @@ const config = {
 
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: [
+            require.resolve('./src/css/custom.css'),
+            require.resolve('./src/css/custom_responsive.css'),
+          ],
         }
       }),
     ],
   ],
 
+  
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
       image: 'img/favicon.ico',
       navbar: {
-        title: 'Restricted Gemba',
+        title: 'Gemba Live',
         logo: {
           alt: 'Star Trainers',
           src: 'img/logo.svg',
@@ -46,29 +50,29 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'sidebarA',
+            sidebarId: 'sidebarInstruct',
+            label: 'Instructions',
             position: 'left',
-            label: 'Trainers',
+            className: 'navbar-prime',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'sidebarPractice',
+            position: 'left',
+            label: 'Practice',
             className: 'navbar-prime',
           },
           {
             to: 'myphotos',
             position: 'left',
-            label: 'On-Site Certification',
+            label: 'Certification',
             className: 'navbar-prime',
           },
           {
             to: 'my-wallet',
-            position: 'left',
-            label: 'Instructor Logs',
-            className: 'navbar-prime',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'sidebarB',
-            label: 'Resources',
             position: 'right',
-            className: 'navbar-left',
+            label: 'Learning Log',
+            className: 'navbar-prime',
           },
           {
             type: 'docSidebar',
@@ -98,6 +102,10 @@ const config = {
           //   className: 'navbar-right',
           // },
         ],
+      },
+      typography: {
+        fontFamily: "'Roboto', sans-serif",
+        fontSize: "16px",
       },
       prism: {
         theme: prismThemes.github,
