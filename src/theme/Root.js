@@ -104,7 +104,7 @@ const Root = ({ children }) => {
     setIsFlipped((prev) => !prev);
     setLoginReturnLoc(location.pathname);
     if (!loginName) {
-      history.push('/golive_room1');
+      history.push('/golive_room2');
     } else {
       history.push('/log-out-user');
     }
@@ -129,17 +129,17 @@ const Root = ({ children }) => {
       {children}
       <section>
       <div className={`bottom-nav-menu${isFlipped ? ' flip' : ''}`}>
-             <p>{loginName ? `User: ${loginName}` : 'click to start'}</p>
+             <p>{loginName ? `User: ${loginName}` : 'My Webcam'}</p>
            
            {!loginName && <div
              className="primaryButton center-align "
              onClick={handleIconClick}>
             <img
                src={loginName ? logoutIcon : loginIcon}
-               alt={loginName ? 'Share with Trainer' : 'Share Off'}
+               alt={loginName ? 'Sign On' : 'Sign Off'}
                className="nav-icon"
              />
-             {loginName ? 'Log Out' : 'Trainer'}
+             {loginName ? 'Log Out' : 'Share'}
            </div>}
          </div>
         </section>

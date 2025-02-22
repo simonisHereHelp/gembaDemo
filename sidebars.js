@@ -49,7 +49,7 @@ const sidebars = {
    },
   {
     type: 'category',
-    label: 'Training Materials',
+    label: 'Series 7',
     items: [
       'wi1/wi-71',
       'wi1/wi-72',
@@ -61,7 +61,19 @@ const sidebars = {
         ],
       },
     ],
-    collapsed: true,
+    collapsed: false,
+  },
+  {
+    type: 'category',
+    label: 'Series 8 (IVL)',
+    items: [
+      {
+        type: 'doc',
+        label: 'IVL™ Catheter Assembly', // Label for the link
+        id: 'wi2/min0434C', // Path to the document in your docs folder
+      },
+    ],
+    collapsed: false,
   },
   {
     type: 'doc',

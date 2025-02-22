@@ -1,0 +1,97 @@
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { useHistory } from "react-router-dom";
+import Layout from "@theme/Layout";
+import Daily from "@daily-co/daily-js";
+import { GlobalPhotoContext } from "../theme/Root";
+
+const DAILY_API_KEY = "373a39750ce5b3f4d805c5b7dcfd84a661137ea513f3e748497805a7a0f8225b";
+
+const GoLive2 = () => {
+  const sessionUrl = "https://gembaly.daily.co/room_01";
+  const [isLive, setIsLive] = useState(false);
+  const callInstanceRef = useRef(null);
+  const history = useHistory();
+  const { setLoginName } = useContext(GlobalPhotoContext);
+  const pushPath = "docs/wi1/wi-71";
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!callInstanceRef.current) {
+      callInstanceRef.current = Daily.createCallObject();
+      console.log("✅ Call instance created.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!callInstanceRef.current) return;
+
+    const startSession = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+
+        await callInstanceRef.current.join({
+          url: sessionUrl,
+          userName: "Kiosk",
+          videoSource: stream.getVideoTracks()[0],
+          audioSource: stream.getAudioTracks()[0],
+          subscribeToTracksAutomatically: true,
+        });
+
+        console.log("✅ Joined the room successfully.");
+        setIsLive(true);
+        setLoginName("Help Desk");
+        setTimeout(() => history.push(pushPath), 500);
+      } catch (error) {
+        console.error("❌ Error joining the room or accessing webcam:", error);
+      }
+    };
+
+    startSession();
+
+    const handleNewParticipants = (event) => {
+      console.log("👀 Participant event:", event);
+      
+      const trainerParticipant = Object.values(callInstanceRef.current.participants()).find(
+        (p) => p?.videoTrack && !p?.local
+      );
+
+      if (trainerParticipant && videoRef.current) {
+        const mediaStream = new MediaStream();
+        if (trainerParticipant.videoTrack) {
+          mediaStream.addTrack(trainerParticipant.videoTrack);
+          console.log("📹 Video track attached.");
+        }
+        if (trainerParticipant.audioTrack) {
+          mediaStream.addTrack(trainerParticipant.audioTrack);
+          console.log("🎤 Audio track attached.");
+        }
+        videoRef.current.srcObject = mediaStream;
+      }
+    };
+
+    callInstanceRef.current.on("participant-updated", handleNewParticipants);
+    callInstanceRef.current.on("participant-joined", handleNewParticipants);
+
+    return () => {
+      callInstanceRef.current.off("participant-updated", handleNewParticipants);
+      callInstanceRef.current.off("participant-joined", handleNewParticipants);
+    };
+  }, [sessionUrl, history, pushPath, setLoginName]);
+
+  return (
+    <Layout title="Live Training" description="Live session started">
+      <div id="golive-meetingRoom" style={{ position: "relative" }}>
+        <h2>{isLive ? "🎥 Live Meeting in Progress" : "🔄 Setting Up Live Session..."}</h2>
+        <div id="bottom-nav-trainerVideo" style={{ position: "absolute", bottom: "10px", left: "10px", width: "200px", height: "150px", backgroundColor: "black" }}>
+          <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", height: "100%" }}></video>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default GoLive2;

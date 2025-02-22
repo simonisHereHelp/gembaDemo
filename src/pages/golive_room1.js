@@ -8,7 +8,7 @@ import { GlobalPhotoContext } from "../theme/Root";
 
 const DAILY_API_KEY = "373a39750ce5b3f4d805c5b7dcfd84a661137ea513f3e748497805a7a0f8225b";
 
-const GoLive = () => {
+const GoLive1 = () => {
   const trainerName = "Trainer";
 
   const sessionUrl = "https://gembaly.daily.co/room_01";
@@ -253,4 +253,4 @@ const GoLive = () => {
   );
 };
 
-export default GoLive;
+export default GoLive1;
