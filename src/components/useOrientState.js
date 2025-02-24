@@ -36,7 +36,8 @@ export async function requestOrientPermission() {
 
 /**
  * Custom hook that sets up sensor listeners to compute the orientation state.
- * 
+ * Additionally, it plays a sound effect (e.g. radar scanning sound) when the state transitions to 2.
+ *
  * Returns:
  *   1: if not moving and angle < 5°
  *   3: if moving and angle is between 30° and 70°
@@ -53,6 +54,11 @@ export function useOrientState() {
   // Refs for low-pass filtering acceleration values.
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
+
+  // Audio ref for the scanning sound effect.
+  const audioRef = useRef(new Audio('@site/static/img/sonar.mp3'));
+  // Ref to keep track of previous sensor state.
+  const prevStateRef = useRef(null);
 
   // Update sensorsEnabled when permissionGranted changes.
   useEffect(() => {
@@ -77,15 +83,27 @@ export function useOrientState() {
         if (x == null || y == null || z == null) return;
 
         // Apply a low-pass filter.
-        filteredAcceleration.current.x = ALPHA * x + (1 - ALPHA) * filteredAcceleration.current.x;
-        filteredAcceleration.current.y = ALPHA * y + (1 - ALPHA) * filteredAcceleration.current.y;
-        filteredAcceleration.current.z = ALPHA * z + (1 - ALPHA) * filteredAcceleration.current.z;
+        filteredAcceleration.current.x =
+          ALPHA * x + (1 - ALPHA) * filteredAcceleration.current.x;
+        filteredAcceleration.current.y =
+          ALPHA * y + (1 - ALPHA) * filteredAcceleration.current.y;
+        filteredAcceleration.current.z =
+          ALPHA * z + (1 - ALPHA) * filteredAcceleration.current.z;
 
-        // Compute the delta between current and previous filtered values.
+        // Compute the delta (Euclidean distance) between current and previous filtered values.
         const delta = Math.sqrt(
-          Math.pow(filteredAcceleration.current.x - prevFilteredAcceleration.current.x, 2) +
-          Math.pow(filteredAcceleration.current.y - prevFilteredAcceleration.current.y, 2) +
-          Math.pow(filteredAcceleration.current.z - prevFilteredAcceleration.current.z, 2)
+          Math.pow(
+            filteredAcceleration.current.x - prevFilteredAcceleration.current.x,
+            2
+          ) +
+            Math.pow(
+              filteredAcceleration.current.y - prevFilteredAcceleration.current.y,
+              2
+            ) +
+            Math.pow(
+              filteredAcceleration.current.z - prevFilteredAcceleration.current.z,
+              2
+            )
         );
 
         // Save current filtered values.
@@ -117,7 +135,6 @@ export function useOrientState() {
           computedAngle = Math.abs(event.beta || 0);
         }
       } else {
-        // Fallback using window.orientation.
         if (window.orientation === 90 || window.orientation === -90) {
           computedAngle = Math.abs(event.gamma || 0);
         } else {
@@ -133,7 +150,6 @@ export function useOrientState() {
 
   // Compute sensor state based on angle and motion.
   useEffect(() => {
-    // If sensor data isn't available, set state to null.
     if (angle === null || lastDeltaMotion === null) {
       setSensorState(null);
       return;
@@ -147,6 +163,16 @@ export function useOrientState() {
       setSensorState(2);
     }
   }, [angle, lastDeltaMotion, currentTime]);
+
+  // Play sound effect when sensor state transitions to 2.
+  useEffect(() => {
+    if (sensorState === 2 && prevStateRef.current !== 2) {
+      audioRef.current.play().catch((error) =>
+        console.error('Audio play failed:', error)
+      );
+    }
+    prevStateRef.current = sensorState;
+  }, [sensorState]);
 
   return sensorState;
 }
