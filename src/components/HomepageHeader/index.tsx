@@ -3,26 +3,24 @@ import Spacer from '@site/src/components/Spacer';
 import styles from './styles.module.css';
 
 const HomepageHeader: React.FC = () => {
-  // State variables for device state, tilt angle, and sensor permission.
-  const [currentState, setCurrentState] = useState('STATE_1');
+  // State variables
+  const [currentState, setCurrentState] = useState('_1');
   const [titleAngle, setTitleAngle] = useState(0);
+  // Instead of a boolean for motion, we store the timestamp (in ms) of the last motion.
+  const [lastDeltaMotion, setLastDeltaMotion] = useState<number | null>(null);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const [sensorsEnabled, setSensorsEnabled] = useState(false);
 
-  // Refs to keep the current state accessible inside event handlers.
-  const currentStateRef = useRef(currentState);
-  useEffect(() => {
-    currentStateRef.current = currentState;
-  }, [currentState]);
+  // Constants for motion filtering and timeout (in ms)
+  const alpha = 0.1;
+  const motionDeltaThreshold = 0.2; // Change in acceleration to trigger motion
+  const motionTimeout = 500; // Consider the device moving if the last motion was within 500ms
 
-  // Refs for filtering acceleration and for comparing consecutive readings.
+  // Refs for filtered acceleration values
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
-  // Motion detection parameters.
-  const motionDeltaThreshold = 0.2; // Adjust this value based on testing.
-  const alpha = 0.1; // Low-pass filter smoothing factor.
-
-  // Request sensor permissions if needed (e.g., on iOS).
+  // Request sensor permissions if needed (e.g., on iOS)
   const enableSensors = async () => {
     if (
       typeof DeviceMotionEvent !== 'undefined' &&
@@ -39,11 +37,19 @@ const HomepageHeader: React.FC = () => {
         console.error('Error requesting sensor permission:', error);
       }
     } else {
-      // Non-iOS or browsers that do not require permission.
       setSensorsEnabled(true);
     }
   };
 
+  // Update current time every 100ms for realtime display
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle device motion: compute delta and update lastDeltaMotion timestamp if above threshold.
   useEffect(() => {
     if (!sensorsEnabled) return;
 
@@ -52,87 +58,98 @@ const HomepageHeader: React.FC = () => {
         const { x, y, z } = event.accelerationIncludingGravity;
         if (x == null || y == null || z == null) return;
 
-        // Update filtered acceleration with a low-pass filter.
+        // Low-pass filter update.
         filteredAcceleration.current.x = alpha * x + (1 - alpha) * filteredAcceleration.current.x;
         filteredAcceleration.current.y = alpha * y + (1 - alpha) * filteredAcceleration.current.y;
         filteredAcceleration.current.z = alpha * z + (1 - alpha) * filteredAcceleration.current.z;
 
-        // Compute the change (delta) from the previous filtered values.
+        // Compute delta (difference) from previous filtered values.
         const delta = Math.sqrt(
           Math.pow(filteredAcceleration.current.x - prevFilteredAcceleration.current.x, 2) +
           Math.pow(filteredAcceleration.current.y - prevFilteredAcceleration.current.y, 2) +
           Math.pow(filteredAcceleration.current.z - prevFilteredAcceleration.current.z, 2)
         );
 
-        // Save current filtered values for the next comparison.
+        // Update previous filtered values.
         prevFilteredAcceleration.current = { ...filteredAcceleration.current };
 
-        // Use the delta to decide if the device is moving.
+        // If the delta exceeds threshold, record the current time.
         if (delta > motionDeltaThreshold) {
-          // If movement is detected while in static state, update to STATE_2.
-          if (currentStateRef.current === 'STATE_1') {
-            setCurrentState('STATE_2');
-          }
-        } else {
-          // If the delta is small, consider the device as static.
-          if (currentStateRef.current !== 'STATE_1') {
-            setCurrentState('STATE_1');
-          }
+          setLastDeltaMotion(Date.now());
         }
       }
     };
 
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-      const beta = event.beta;
-      if (beta != null) {
-        // Use the absolute value of beta as the tilt angle.
-        const tiltAngle = Math.abs(beta);
-        setTitleAngle(tiltAngle);
-
-        // Only update state based on orientation when device is not static.
-        if (currentStateRef.current !== 'STATE_1') {
-          if (currentStateRef.current === 'STATE_2' && tiltAngle >= 20 && tiltAngle <= 60) {
-            setCurrentState('STATE_3');
-          } else if (currentStateRef.current === 'STATE_3' && (tiltAngle < 20 || tiltAngle > 60)) {
-            setCurrentState('STATE_2');
-          }
-        }
-      }
-    };
-
-    if (window.DeviceMotionEvent) {
-      window.addEventListener('devicemotion', handleMotion, false);
-    } else {
-      console.log('DeviceMotionEvent is not supported on your device/browser.');
-    }
-
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', handleOrientation, false);
-    } else {
-      console.log('DeviceOrientationEvent is not supported on your device/browser.');
-    }
-
-    // Cleanup event listeners on component unmount.
+    window.addEventListener('devicemotion', handleMotion, false);
     return () => {
-      if (window.DeviceMotionEvent) {
-        window.removeEventListener('devicemotion', handleMotion);
-      }
-      if (window.DeviceOrientationEvent) {
-        window.removeEventListener('deviceorientation', handleOrientation);
-      }
+      window.removeEventListener('devicemotion', handleMotion);
     };
   }, [sensorsEnabled]);
+
+  // Handle device orientation: compute the absolute angle adjusted for orientation mode.
+  useEffect(() => {
+    if (!sensorsEnabled) return;
+
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      let angle = 0;
+      // Determine orientation mode (portrait vs. landscape)
+      if (window.screen.orientation && window.screen.orientation.type) {
+        if (window.screen.orientation.type.startsWith('landscape')) {
+          // In landscape mode, use gamma.
+          angle = Math.abs(event.gamma || 0);
+        } else {
+          // In portrait mode, use beta.
+          angle = Math.abs(event.beta || 0);
+        }
+      } else {
+        // Fallback using window.orientation.
+        if (window.orientation === 90 || window.orientation === -90) {
+          angle = Math.abs(event.gamma || 0);
+        } else {
+          angle = Math.abs(event.beta || 0);
+        }
+      }
+      setTitleAngle(angle);
+    };
+
+    window.addEventListener('deviceorientation', handleOrientation, false);
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, [sensorsEnabled]);
+
+  // Compute isMoving based on lastDeltaMotion and current time.
+  const isMoving = lastDeltaMotion !== null && (currentTime - lastDeltaMotion < motionTimeout);
+
+  // Update state based on dual metrics:
+  // A = titleAngle; B = isMoving.
+  useEffect(() => {
+    if (!isMoving && titleAngle < 2) {
+      setCurrentState('_1');
+    } else if (isMoving && titleAngle > 30 && titleAngle < 70) {
+      setCurrentState('_3');
+    } else if (isMoving) {
+      setCurrentState('_2');
+    }
+  }, [isMoving, titleAngle]);
 
   return (
     <div className={styles.Container} style={{ height: 250 }}>
       <div style={{ position: 'relative', textAlign: 'left', width: 'max-content' }}>
-        <h1 className={styles.HeaderTitle}>Device Orientation Demo (deifferentials vs absolute)</h1>
+        <h1 className={styles.HeaderTitle}>Device Orientation Demo</h1>
         <Spacer height={50} />
         {!sensorsEnabled ? (
           <button onClick={enableSensors}>Enable Sensors</button>
         ) : (
           <>
             <span>State = {currentState}</span>
+            <Spacer height={50} />
+            <span>
+              Motioned ={' '}
+              {lastDeltaMotion
+                ? `${(currentTime - lastDeltaMotion).toFixed(0)} ms since last motion`
+                : 'null'}
+            </span>
             <Spacer height={50} />
             <span>Angle = {titleAngle.toFixed(2)}°</span>
             <Spacer height={50} />
