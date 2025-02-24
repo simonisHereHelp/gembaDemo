@@ -6,20 +6,21 @@ const HomepageHeader: React.FC = () => {
   // State variables for current state, absolute angle, and last motion timestamp.
   const [currentState, setCurrentState] = useState('_1');
   const [titleAngle, setTitleAngle] = useState(0);
+  // Instead of a boolean, we store the timestamp (in ms) of the last detected motion.
   const [lastDeltaMotion, setLastDeltaMotion] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [sensorsEnabled, setSensorsEnabled] = useState(false);
 
-  // More sensitive parameters (adjust as needed):
+  // Parameters for sensitivity.
   const alpha = 0.1;
   const motionDeltaThreshold = 0.1; // Lower threshold for increased sensitivity.
-  const motionTimeout = 300; // Device considered "moving" if motion detected within last 300ms.
+  const motionTimeout = 300; // Device is considered "in motion" if a motion event occurred within the last 300ms.
 
   // Refs for low-pass filtering acceleration values.
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
-  // Function to request sensor permissions (necessary on some platforms, e.g. iOS).
+  // Request sensor permissions (especially needed on iOS).
   const enableSensors = async () => {
     if (
       typeof DeviceMotionEvent !== 'undefined' &&
@@ -48,7 +49,7 @@ const HomepageHeader: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle device motion: update lastDeltaMotion when significant motion is detected.
+  // Handle device motion: update lastDeltaMotion timestamp when significant motion is detected.
   useEffect(() => {
     if (!sensorsEnabled) return;
 
@@ -85,19 +86,19 @@ const HomepageHeader: React.FC = () => {
     };
   }, [sensorsEnabled]);
 
-  // Handle device orientation: compute absolute angle (Metric A) adjusted for portrait vs. landscape.
+  // Handle device orientation: compute absolute angle adjusted for portrait vs. landscape.
   useEffect(() => {
     if (!sensorsEnabled) return;
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
       let angle = 0;
-      // Determine orientation mode using the Screen Orientation API or fallback.
+      // Use the Screen Orientation API (or fallback) to determine which angle to use.
       if (window.screen.orientation && window.screen.orientation.type) {
         if (window.screen.orientation.type.startsWith('landscape')) {
-          // In landscape, use gamma.
+          // Landscape: use gamma.
           angle = Math.abs(event.gamma || 0);
         } else {
-          // In portrait, use beta.
+          // Portrait: use beta.
           angle = Math.abs(event.beta || 0);
         }
       } else {
@@ -117,15 +118,15 @@ const HomepageHeader: React.FC = () => {
     };
   }, [sensorsEnabled]);
 
-  // Define whether the device is considered "in motion" based on the motion timeout.
+  // Determine if the device is "moving" based on the time elapsed since the last motion.
   const isMoving = lastDeltaMotion !== null && (currentTime - lastDeltaMotion < motionTimeout);
 
-  // Determine state based on dual metrics:
-  // 1) If not moving, state = _1.
-  // 2) If moving and angle is between 30° and 70°, state = _3.
-  // 3) If moving and angle is outside that range, state = _2.
+  // Apply the new state logic:
+  // 1) If angle < 5° and not moving, state_1.
+  // 2) Otherwise, default to state_2.
+  // 3) If in state_2 and angle is between 30° and 70°, override to state_3.
   useEffect(() => {
-    if (!isMoving) {
+    if (!isMoving && titleAngle < 5) {
       setCurrentState('_1');
     } else {
       if (titleAngle >= 30 && titleAngle <= 70) {
@@ -139,7 +140,7 @@ const HomepageHeader: React.FC = () => {
   return (
     <div className={styles.Container} style={{ height: 250 }}>
       <div style={{ position: 'relative', textAlign: 'left', width: 'max-content' }}>
-        <h1 className={styles.HeaderTitle}>Device Orientation Demo</h1>
+        <h1 className={styles.HeaderTitle}>Device Orientation Demo v4</h1>
         <Spacer height={50} />
         {!sensorsEnabled ? (
           <button onClick={enableSensors}>Enable Sensors</button>

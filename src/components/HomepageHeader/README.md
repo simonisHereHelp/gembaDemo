@@ -9,9 +9,7 @@ Metric B (Motion Timing): Instead of a boolean, the timestamp of the last detect
 State Determination:
 The state is then set exclusively:
 
-Below is an updated version of your component where the state is computed as follows:
-
-If the device is motionless (no recent motion detected), then the state is set to _1.
-If the device is moving:
-If the absolute angle is between 30° and 70°, the state is _3.
-Otherwise, the state is _2.
+Rule:
+If the device’s absolute angle is less than 5° and it is not moving, then the state is _1.
+Otherwise, the state defaults to _2.
+Additionally, if the state would be _2 and the angle is between 30° and 70°, then override to state _3.
