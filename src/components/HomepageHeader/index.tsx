@@ -3,25 +3,23 @@ import Spacer from '@site/src/components/Spacer';
 import styles from './styles.module.css';
 
 const HomepageHeader: React.FC = () => {
-  // State variables for current state, absolute angle (A), and last motion timestamp (B)
+  // State variables for current state, absolute angle, and last motion timestamp.
   const [currentState, setCurrentState] = useState('_1');
   const [titleAngle, setTitleAngle] = useState(0);
-  // Instead of a boolean, we store the timestamp (in ms) of the last detected motion.
   const [lastDeltaMotion, setLastDeltaMotion] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [sensorsEnabled, setSensorsEnabled] = useState(false);
 
-  // More sensitive parameters:
-  // Lower the threshold for delta motion detection (more sensitive)
+  // More sensitive parameters (adjust as needed):
   const alpha = 0.1;
-  const motionDeltaThreshold = 0.1; // Reduced threshold for increased sensitivity
-  const motionTimeout = 300; // Consider the device "in motion" if within 300ms of last motion
+  const motionDeltaThreshold = 0.1; // Lower threshold for increased sensitivity.
+  const motionTimeout = 300; // Device considered "moving" if motion detected within last 300ms.
 
-  // Refs for filtered acceleration values
+  // Refs for low-pass filtering acceleration values.
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
-  // Function to request sensor permissions (especially needed on iOS)
+  // Function to request sensor permissions (necessary on some platforms, e.g. iOS).
   const enableSensors = async () => {
     if (
       typeof DeviceMotionEvent !== 'undefined' &&
@@ -42,7 +40,7 @@ const HomepageHeader: React.FC = () => {
     }
   };
 
-  // Update current time every 100ms for realtime display
+  // Update current time every 100ms for realtime calculations.
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
@@ -50,7 +48,7 @@ const HomepageHeader: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle device motion: compute delta between successive filtered acceleration readings.
+  // Handle device motion: update lastDeltaMotion when significant motion is detected.
   useEffect(() => {
     if (!sensorsEnabled) return;
 
@@ -64,17 +62,17 @@ const HomepageHeader: React.FC = () => {
         filteredAcceleration.current.y = alpha * y + (1 - alpha) * filteredAcceleration.current.y;
         filteredAcceleration.current.z = alpha * z + (1 - alpha) * filteredAcceleration.current.z;
 
-        // Calculate the delta (Euclidean distance) between current and previous values.
+        // Compute the delta (Euclidean distance) between current and previous filtered values.
         const delta = Math.sqrt(
           Math.pow(filteredAcceleration.current.x - prevFilteredAcceleration.current.x, 2) +
           Math.pow(filteredAcceleration.current.y - prevFilteredAcceleration.current.y, 2) +
           Math.pow(filteredAcceleration.current.z - prevFilteredAcceleration.current.z, 2)
         );
 
-        // Save current values for the next event.
+        // Save current filtered values for the next comparison.
         prevFilteredAcceleration.current = { ...filteredAcceleration.current };
 
-        // If delta exceeds threshold, record the current time.
+        // If the delta exceeds threshold, record the current time.
         if (delta > motionDeltaThreshold) {
           setLastDeltaMotion(Date.now());
         }
@@ -87,22 +85,23 @@ const HomepageHeader: React.FC = () => {
     };
   }, [sensorsEnabled]);
 
-  // Handle device orientation: compute the absolute angle (A) adjusted for portrait vs. landscape.
+  // Handle device orientation: compute absolute angle (Metric A) adjusted for portrait vs. landscape.
   useEffect(() => {
     if (!sensorsEnabled) return;
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
       let angle = 0;
-      // Determine mode using the Screen Orientation API, fallback to window.orientation.
+      // Determine orientation mode using the Screen Orientation API or fallback.
       if (window.screen.orientation && window.screen.orientation.type) {
         if (window.screen.orientation.type.startsWith('landscape')) {
-          // Landscape: use gamma (side-to-side tilt)
+          // In landscape, use gamma.
           angle = Math.abs(event.gamma || 0);
         } else {
-          // Portrait: use beta (front-to-back tilt)
+          // In portrait, use beta.
           angle = Math.abs(event.beta || 0);
         }
       } else {
+        // Fallback using window.orientation.
         if (window.orientation === 90 || window.orientation === -90) {
           angle = Math.abs(event.gamma || 0);
         } else {
@@ -118,17 +117,22 @@ const HomepageHeader: React.FC = () => {
     };
   }, [sensorsEnabled]);
 
-  // Determine if the device is considered "in motion" (B) based on the time since last motion.
+  // Define whether the device is considered "in motion" based on the motion timeout.
   const isMoving = lastDeltaMotion !== null && (currentTime - lastDeltaMotion < motionTimeout);
 
-  // Combine dual metrics (A: titleAngle, B: isMoving) to define unique states.
+  // Determine state based on dual metrics:
+  // 1) If not moving, state = _1.
+  // 2) If moving and angle is between 30° and 70°, state = _3.
+  // 3) If moving and angle is outside that range, state = _2.
   useEffect(() => {
-    if (!isMoving && titleAngle < 2) {
+    if (!isMoving) {
       setCurrentState('_1');
-    } else if (isMoving && titleAngle > 30 && titleAngle < 70) {
-      setCurrentState('_3');
-    } else if (isMoving) {
-      setCurrentState('_2');
+    } else {
+      if (titleAngle >= 30 && titleAngle <= 70) {
+        setCurrentState('_3');
+      } else {
+        setCurrentState('_2');
+      }
     }
   }, [isMoving, titleAngle]);
 
