@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Spacer from '@site/src/components/Spacer';
 import styles from './styles.module.css';
 
-const HeaderView: React.FC = () => {
+const HomepageHeader: React.FC = () => {
   // React state to hold the current device state.
   const [currentState, setCurrentState] = useState('STATE_1');
   // React state to hold the current tilt angle.
@@ -106,4 +106,4 @@ const HeaderView: React.FC = () => {
   );
 };
 
-export default HeaderView;
+export default HomepageHeader;
