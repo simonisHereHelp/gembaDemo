@@ -10,15 +10,15 @@ const HeaderView: React.FC = () => {
       style={{ height: 250 }}>
       <div style={{ position: "relative", textAlign: "left", width: "max-content" }}>
         <h1 className={styles.HeaderTitle}>
-        expert-led training in <span className={styles.SeparatorText}>restricted-access</span> production environments.
+        Where the production floor <span className={styles.SeparatorText}>comes alive</span>.
         </h1>
         <Spacer height={50} />
         <TypeAnimation
           className={styles.HeaderTyper}
           sequence={[
-            "Security: No on-site access required.", 2500,
-            "Training: Delivered by our experts.", 2500,
-            "Assessment: Securely logged with verifiable tokens.", 2500, 
+            "Live insights direct from the frontline.", 2500,
+            "Experience real-time production data.", 2500,
+            "Empower continuous improvement.", 2500,
           ]}
           repeat={Infinity}
         />

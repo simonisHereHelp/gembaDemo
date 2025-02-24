@@ -139,7 +139,7 @@ const Root = ({ children }) => {
                alt={loginName ? 'Sign On' : 'Sign Off'}
                className="nav-icon"
              />
-             {loginName ? 'Log Out' : 'Share'}
+             {loginName ? 'Log Out' : 'Go Live!'}
            </div>}
          </div>
         </section>

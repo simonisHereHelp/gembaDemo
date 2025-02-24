@@ -42,7 +42,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/favicon.ico',
       navbar: {
-        title: 'Xperts On-Site',
+        title: 'Gemba Live!',
         logo: {
           alt: 'Star Trainers',
           src: 'img/logo.svg',
