@@ -8,6 +8,15 @@ const MOTION_DELTA_THRESHOLD = 0.1; // Threshold for motion detection
 let permissionRequested = false;
 let permissionGranted = false;
 
+// Debug log helper (only logs up to 6 messages)
+let debugCount = 0;
+function debugLog(...args) {
+  if (debugCount < 6) {
+    console.log(...args);
+    debugCount++;
+  }
+}
+
 /**
  * Requests permission for device motion/orientation events.
  * Returns a Promise that resolves to true if permission is granted (or not required).
@@ -22,6 +31,7 @@ export async function requestOrientPermission() {
       try {
         const response = await DeviceMotionEvent.requestPermission();
         permissionGranted = response === 'granted';
+        debugLog('Permission response:', response);
       } catch (error) {
         console.error('Error requesting sensor permission:', error);
         permissionGranted = false;
@@ -29,6 +39,7 @@ export async function requestOrientPermission() {
     } else {
       // For browsers that do not require permission.
       permissionGranted = true;
+      debugLog('Permission not required; automatically granted.');
     }
   }
   return permissionGranted;
@@ -36,7 +47,7 @@ export async function requestOrientPermission() {
 
 /**
  * Custom hook that sets up sensor listeners to compute the orientation state.
- * Additionally, it plays a sound effect (e.g. radar scanning sound) when the state transitions to 2.
+ * Additionally, it plays a sound effect when the state transitions to 2.
  *
  * Returns:
  *   1: if not moving and angle < 5°
@@ -56,13 +67,14 @@ export function useOrientState() {
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
   // Audio ref for the scanning sound effect.
-  const audioRef = useRef(new Audio('@site/static/img/sonar.mp3'));
+  const audioRef = useRef(new Audio('/sonar.mp3'));
   // Ref to keep track of previous sensor state.
   const prevStateRef = useRef(null);
 
   // Update sensorsEnabled when permissionGranted changes.
   useEffect(() => {
     setSensorsEnabled(permissionGranted);
+    debugLog('Sensors enabled:', permissionGranted);
   }, []);
 
   // Update current time every 100ms.
@@ -82,7 +94,6 @@ export function useOrientState() {
         const { x, y, z } = event.accelerationIncludingGravity;
         if (x == null || y == null || z == null) return;
 
-        // Apply a low-pass filter.
         filteredAcceleration.current.x =
           ALPHA * x + (1 - ALPHA) * filteredAcceleration.current.x;
         filteredAcceleration.current.y =
@@ -90,7 +101,6 @@ export function useOrientState() {
         filteredAcceleration.current.z =
           ALPHA * z + (1 - ALPHA) * filteredAcceleration.current.z;
 
-        // Compute the delta (Euclidean distance) between current and previous filtered values.
         const delta = Math.sqrt(
           Math.pow(
             filteredAcceleration.current.x - prevFilteredAcceleration.current.x,
@@ -106,12 +116,11 @@ export function useOrientState() {
             )
         );
 
-        // Save current filtered values.
         prevFilteredAcceleration.current = { ...filteredAcceleration.current };
 
-        // If delta exceeds threshold, update lastDeltaMotion.
         if (delta > MOTION_DELTA_THRESHOLD) {
           setLastDeltaMotion(Date.now());
+          debugLog('Motion delta exceeded:', delta);
         }
       }
     };
@@ -128,10 +137,8 @@ export function useOrientState() {
       let computedAngle = 0;
       if (window.screen.orientation && window.screen.orientation.type) {
         if (window.screen.orientation.type.startsWith('landscape')) {
-          // In landscape mode, use gamma.
           computedAngle = Math.abs(event.gamma || 0);
         } else {
-          // In portrait mode, use beta.
           computedAngle = Math.abs(event.beta || 0);
         }
       } else {
@@ -142,6 +149,7 @@ export function useOrientState() {
         }
       }
       setAngle(computedAngle);
+      debugLog('Computed angle:', computedAngle);
     };
 
     window.addEventListener('deviceorientation', handleOrientation, false);
@@ -155,21 +163,29 @@ export function useOrientState() {
       return;
     }
     const isMoving = currentTime - lastDeltaMotion < DEFAULT_MOTION_TIMEOUT;
+    let computedState;
     if (!isMoving && angle < 5) {
-      setSensorState(1);
+      computedState = 1;
     } else if (isMoving && angle >= 30 && angle <= 70) {
-      setSensorState(3);
+      computedState = 3;
     } else {
-      setSensorState(2);
+      computedState = 2;
     }
+    setSensorState(computedState);
+    debugLog('Computed sensor state:', computedState);
   }, [angle, lastDeltaMotion, currentTime]);
 
-  // Play sound effect when sensor state transitions to 2.
+  // Play or stop sound effect based on sensor state.
   useEffect(() => {
     if (sensorState === 2 && prevStateRef.current !== 2) {
       audioRef.current.play().catch((error) =>
         console.error('Audio play failed:', error)
       );
+      debugLog('Playing sound effect for state 2.');
+    } else if (sensorState !== 2) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      debugLog('Stopping sound effect.');
     }
     prevStateRef.current = sensorState;
   }, [sensorState]);
