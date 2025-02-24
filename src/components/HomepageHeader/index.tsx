@@ -8,20 +8,21 @@ const HomepageHeader: React.FC = () => {
   const [titleAngle, setTitleAngle] = useState(0);
   const [sensorsEnabled, setSensorsEnabled] = useState(false);
 
-  // Refs to hold state inside event handlers.
+  // Refs to keep the current state accessible inside event handlers.
   const currentStateRef = useRef(currentState);
   useEffect(() => {
     currentStateRef.current = currentState;
   }, [currentState]);
 
-  // Ref for storing filtered acceleration.
+  // Refs for filtering acceleration and for comparing consecutive readings.
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
+  const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
-  // Constants for motion detection and filtering.
-  const motionThreshold = 1.5;
-  const alpha = 0.1;
+  // Motion detection parameters.
+  const motionDeltaThreshold = 0.2; // Adjust this value based on testing.
+  const alpha = 0.1; // Low-pass filter smoothing factor.
 
-  // Function to request sensor permissions (required on iOS).
+  // Request sensor permissions if needed (e.g., on iOS).
   const enableSensors = async () => {
     if (
       typeof DeviceMotionEvent !== 'undefined' &&
@@ -38,7 +39,7 @@ const HomepageHeader: React.FC = () => {
         console.error('Error requesting sensor permission:', error);
       }
     } else {
-      // For non-iOS devices or browsers not requiring permission.
+      // Non-iOS or browsers that do not require permission.
       setSensorsEnabled(true);
     }
   };
@@ -51,28 +52,32 @@ const HomepageHeader: React.FC = () => {
         const { x, y, z } = event.accelerationIncludingGravity;
         if (x == null || y == null || z == null) return;
 
-        // Apply a low-pass filter to smooth sensor noise.
+        // Update filtered acceleration with a low-pass filter.
         filteredAcceleration.current.x = alpha * x + (1 - alpha) * filteredAcceleration.current.x;
         filteredAcceleration.current.y = alpha * y + (1 - alpha) * filteredAcceleration.current.y;
         filteredAcceleration.current.z = alpha * z + (1 - alpha) * filteredAcceleration.current.z;
 
-        // Compute the magnitude of the filtered acceleration.
-        const netAcceleration = Math.sqrt(
-          filteredAcceleration.current.x ** 2 +
-          filteredAcceleration.current.y ** 2 +
-          filteredAcceleration.current.z ** 2
+        // Compute the change (delta) from the previous filtered values.
+        const delta = Math.sqrt(
+          Math.pow(filteredAcceleration.current.x - prevFilteredAcceleration.current.x, 2) +
+          Math.pow(filteredAcceleration.current.y - prevFilteredAcceleration.current.y, 2) +
+          Math.pow(filteredAcceleration.current.z - prevFilteredAcceleration.current.z, 2)
         );
 
-        // Transition from STATE_1 (static) to STATE_2 (lifted) if motion exceeds threshold.
-        if (currentStateRef.current === 'STATE_1' && netAcceleration > motionThreshold) {
-          setCurrentState('STATE_2');
-        }
-        // Revert to STATE_1 if motion drops below the threshold.
-        else if (
-          (currentStateRef.current === 'STATE_2' || currentStateRef.current === 'STATE_3') &&
-          netAcceleration < motionThreshold
-        ) {
-          setCurrentState('STATE_1');
+        // Save current filtered values for the next comparison.
+        prevFilteredAcceleration.current = { ...filteredAcceleration.current };
+
+        // Use the delta to decide if the device is moving.
+        if (delta > motionDeltaThreshold) {
+          // If movement is detected while in static state, update to STATE_2.
+          if (currentStateRef.current === 'STATE_1') {
+            setCurrentState('STATE_2');
+          }
+        } else {
+          // If the delta is small, consider the device as static.
+          if (currentStateRef.current !== 'STATE_1') {
+            setCurrentState('STATE_1');
+          }
         }
       }
     };
@@ -80,22 +85,21 @@ const HomepageHeader: React.FC = () => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
       const beta = event.beta;
       if (beta != null) {
-        // Calculate the absolute tilt angle from the beta value.
+        // Use the absolute value of beta as the tilt angle.
         const tiltAngle = Math.abs(beta);
         setTitleAngle(tiltAngle);
 
-        // When in STATE_2, if tilt is between 20° and 60°, transition to STATE_3.
-        if (currentStateRef.current === 'STATE_2' && tiltAngle >= 20 && tiltAngle <= 60) {
-          setCurrentState('STATE_3');
-        }
-        // If the tilt moves out of that range, revert to STATE_2.
-        else if (currentStateRef.current === 'STATE_3' && (tiltAngle < 20 || tiltAngle > 60)) {
-          setCurrentState('STATE_2');
+        // Only update state based on orientation when device is not static.
+        if (currentStateRef.current !== 'STATE_1') {
+          if (currentStateRef.current === 'STATE_2' && tiltAngle >= 20 && tiltAngle <= 60) {
+            setCurrentState('STATE_3');
+          } else if (currentStateRef.current === 'STATE_3' && (tiltAngle < 20 || tiltAngle > 60)) {
+            setCurrentState('STATE_2');
+          }
         }
       }
     };
 
-    // Register event listeners.
     if (window.DeviceMotionEvent) {
       window.addEventListener('devicemotion', handleMotion, false);
     } else {
@@ -108,7 +112,7 @@ const HomepageHeader: React.FC = () => {
       console.log('DeviceOrientationEvent is not supported on your device/browser.');
     }
 
-    // Cleanup event listeners on unmount.
+    // Cleanup event listeners on component unmount.
     return () => {
       if (window.DeviceMotionEvent) {
         window.removeEventListener('devicemotion', handleMotion);
@@ -122,9 +126,9 @@ const HomepageHeader: React.FC = () => {
   return (
     <div className={styles.Container} style={{ height: 250 }}>
       <div style={{ position: 'relative', textAlign: 'left', width: 'max-content' }}>
-        <h1 className={styles.HeaderTitle}>Device Orientation Demo</h1>
+        <h1 className={styles.HeaderTitle}>Device Orientation Demo (deifferentials vs absolute)</h1>
         <Spacer height={50} />
-        { !sensorsEnabled ? (
+        {!sensorsEnabled ? (
           <button onClick={enableSensors}>Enable Sensors</button>
         ) : (
           <>
