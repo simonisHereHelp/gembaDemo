@@ -53,26 +53,13 @@ const config = {
             sidebarId: 'sidebarInstruct',
             label: 'Instructions',
             position: 'left',
-            className: 'navbar-prime',
+            className: 'navbar-left',
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'sidebarPractice',
+            to: 'myWebcam',
             position: 'left',
-            label: 'Practice',
-            className: 'navbar-prime',
-          },
-          {
-            to: 'myphotos',
-            position: 'left',
-            label: 'Certification',
-            className: 'navbar-prime',
-          },
-          {
-            to: 'my-wallet',
-            position: 'right',
-            label: 'Learning Log',
-            className: 'navbar-prime',
+            label: 'My Webcam',
+            className: 'navbar-left',
           },
           {
             type: 'docSidebar',
@@ -84,23 +71,9 @@ const config = {
           {
             to: 'goodbye',
             position: 'right',
-            label: 'End Training',
-            className: 'navbar-right',
-          },
-          // {
-          //   type: 'doc',
-          //   docId: 'pricing', // Updated route
-          //   label: 'Pricing',
-          //   position: 'right',
-          //   className: 'navbar-right',
-          // },
-          // {
-          //   type: 'docSidebar',
-          //   sidebarId: 'sidebarC',
-          //   label: 'Validation',
-          //   position: 'right',
-          //   className: 'navbar-right',
-          // },
+            label: 'Exit',
+            className: 'navbar-left',
+          }
         ],
       },
       typography: {

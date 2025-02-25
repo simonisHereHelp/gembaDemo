@@ -3,38 +3,6 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
-  sidebarPractice: [
-    {
-      type: 'category',
-      label: 'Session 7.1▶️',
-      items: [
-        'prov1',
-        'prov2',
-        'prov3',
-        'prov4',
-        'prov5',
-        'prov6',
-      ],
-      collapsed: true,
-    },
-    
-    {
-      type: 'category',
-      label: 'Session 7.2▶️',
-      items: [
-        'prov7',
-        'prov8',
-        'prov9',
-        'prov10',
-        'prov11',
-        'prov12',
-        'prov13',
-      ],
-      collapsed: true,
-    },
-    // Category for Document with nested References category
-    'wi2/scope',
-  ],
   sidebarInstruct: [
   {type: 'category',
     label: 'Live Training',
