@@ -27,7 +27,7 @@ const HomepageHeader = () => {
         ) : (
           <>
             <button onClick={handleRequestPermission}>
-            Activate Motion Tracking
+              Activate Motion Tracking
             </button>
             <Spacer height={50} />
             <span>Sensor permission required</span>
