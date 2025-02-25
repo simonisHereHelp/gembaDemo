@@ -67,7 +67,14 @@ export function useMotionState() {
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
   // Audio ref for the scanning sound effect.
-  const audioRef = useRef(new Audio('/sonar.mp3'));
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      audioRef.current = new Audio('/sonar.mp3');
+    }
+  }, []);
+  
   // Ref to keep track of previous sensor state.
   const prevStateRef = useRef(null);
 
