@@ -21,7 +21,7 @@ function debugLog(...args) {
  * Requests permission for device motion/orientation events.
  * Returns a Promise that resolves to true if permission is granted (or not required).
  */
-export async function requestOrientPermission() {
+export async function requestMotionPermission() {
   if (!permissionRequested) {
     permissionRequested = true;
     if (
@@ -55,7 +55,7 @@ export async function requestOrientPermission() {
  *   2: otherwise (when moving but angle is not in that range)
  *   null: if sensor data isn’t available yet.
  */
-export function useOrientState() {
+export function useMotionState() {
   const [sensorState, setSensorState] = useState(null);
   const [angle, setAngle] = useState(null);
   const [lastDeltaMotion, setLastDeltaMotion] = useState(null);
