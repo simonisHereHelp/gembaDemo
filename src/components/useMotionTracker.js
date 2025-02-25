@@ -4,11 +4,9 @@ const DEFAULT_MOTION_TIMEOUT = 300; // in ms
 const ALPHA = 0.1; // Low-pass filter smoothing factor
 const MOTION_DELTA_THRESHOLD = 0.1; // Threshold for motion detection
 
-// Module-level flags to ensure permission is requested only once.
 let permissionRequested = false;
 let permissionGranted = false;
 
-// Debug log helper (only logs up to 6 messages)
 let debugCount = 0;
 function debugLog(...args) {
   if (debugCount < 6) {
@@ -37,7 +35,6 @@ export async function requestMotionPermission() {
         permissionGranted = false;
       }
     } else {
-      // For browsers that do not require permission.
       permissionGranted = true;
       debugLog('Permission not required; automatically granted.');
     }
@@ -46,42 +43,44 @@ export async function requestMotionPermission() {
 }
 
 /**
- * Custom hook that sets up sensor listeners to compute the orientation state.
+ * Custom hook that sets up sensor listeners to compute the motion state.
  * Additionally, it plays a sound effect when the state transitions to 2.
  *
- * Returns:
- *   1: if not moving and angle < 5°
- *   3: if moving and angle is between 30° and 70°
- *   2: otherwise (when moving but angle is not in that range)
- *   null: if sensor data isn’t available yet.
+ * Accepts:
+ *   enabled (boolean) – whether sensor tracking is enabled.
+ *
+ * Returns an object with:
+ *   sensorState: 1 if not moving and angle < 5°, 3 if moving and angle between 30°–70°, 2 otherwise,
+ *   angle: the computed absolute angle,
+ *   lastDeltaMotion: timestamp (ms) of the last significant motion,
+ *   currentTime: current time (ms).
  */
-export function useMotionState() {
+export function useMotionState(enabled) {
   const [sensorState, setSensorState] = useState(null);
   const [angle, setAngle] = useState(null);
   const [lastDeltaMotion, setLastDeltaMotion] = useState(null);
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [sensorsEnabled, setSensorsEnabled] = useState(permissionGranted);
+  const [sensorsEnabled, setSensorsEnabled] = useState(enabled);
+
+  // Update sensorsEnabled whenever the enabled prop changes.
+  useEffect(() => {
+    setSensorsEnabled(enabled);
+  }, [enabled]);
 
   // Refs for low-pass filtering acceleration values.
   const filteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
   const prevFilteredAcceleration = useRef({ x: 0, y: 0, z: 0 });
 
-  // Audio ref for the scanning sound effect.
+  // Audio ref for the scanning sound effect (client only).
   const audioRef = useRef(null);
+  // Ref to track previous sensor state.
+  const prevStateRef = useRef(null);
 
+  // Initialize the Audio object on the client.
   useEffect(() => {
     if (typeof window !== 'undefined') {
       audioRef.current = new Audio('/sonar.mp3');
     }
-  }, []);
-  
-  // Ref to keep track of previous sensor state.
-  const prevStateRef = useRef(null);
-
-  // Update sensorsEnabled when permissionGranted changes.
-  useEffect(() => {
-    setSensorsEnabled(permissionGranted);
-    debugLog('Sensors enabled:', permissionGranted);
   }, []);
 
   // Update current time every 100ms.
@@ -100,31 +99,15 @@ export function useMotionState() {
       if (event.accelerationIncludingGravity) {
         const { x, y, z } = event.accelerationIncludingGravity;
         if (x == null || y == null || z == null) return;
-
-        filteredAcceleration.current.x =
-          ALPHA * x + (1 - ALPHA) * filteredAcceleration.current.x;
-        filteredAcceleration.current.y =
-          ALPHA * y + (1 - ALPHA) * filteredAcceleration.current.y;
-        filteredAcceleration.current.z =
-          ALPHA * z + (1 - ALPHA) * filteredAcceleration.current.z;
-
+        filteredAcceleration.current.x = ALPHA * x + (1 - ALPHA) * filteredAcceleration.current.x;
+        filteredAcceleration.current.y = ALPHA * y + (1 - ALPHA) * filteredAcceleration.current.y;
+        filteredAcceleration.current.z = ALPHA * z + (1 - ALPHA) * filteredAcceleration.current.z;
         const delta = Math.sqrt(
-          Math.pow(
-            filteredAcceleration.current.x - prevFilteredAcceleration.current.x,
-            2
-          ) +
-            Math.pow(
-              filteredAcceleration.current.y - prevFilteredAcceleration.current.y,
-              2
-            ) +
-            Math.pow(
-              filteredAcceleration.current.z - prevFilteredAcceleration.current.z,
-              2
-            )
+          Math.pow(filteredAcceleration.current.x - prevFilteredAcceleration.current.x, 2) +
+          Math.pow(filteredAcceleration.current.y - prevFilteredAcceleration.current.y, 2) +
+          Math.pow(filteredAcceleration.current.z - prevFilteredAcceleration.current.z, 2)
         );
-
         prevFilteredAcceleration.current = { ...filteredAcceleration.current };
-
         if (delta > MOTION_DELTA_THRESHOLD) {
           setLastDeltaMotion(Date.now());
           debugLog('Motion delta exceeded:', delta);
@@ -136,10 +119,9 @@ export function useMotionState() {
     return () => window.removeEventListener('devicemotion', handleMotion);
   }, [sensorsEnabled]);
 
-  // Device orientation: compute the absolute angle (adjusting for portrait vs. landscape).
+  // Device orientation: compute the absolute angle.
   useEffect(() => {
     if (!sensorsEnabled) return;
-
     const handleOrientation = (event) => {
       let computedAngle = 0;
       if (window.screen.orientation && window.screen.orientation.type) {
@@ -158,7 +140,6 @@ export function useMotionState() {
       setAngle(computedAngle);
       debugLog('Computed angle:', computedAngle);
     };
-
     window.addEventListener('deviceorientation', handleOrientation, false);
     return () => window.removeEventListener('deviceorientation', handleOrientation);
   }, [sensorsEnabled]);
@@ -185,17 +166,19 @@ export function useMotionState() {
   // Play or stop sound effect based on sensor state.
   useEffect(() => {
     if (sensorState === 2 && prevStateRef.current !== 2) {
-      audioRef.current.play().catch((error) =>
-        console.error('Audio play failed:', error)
-      );
-      debugLog('Playing sound effect for state 2.');
+      if (audioRef.current) {
+        audioRef.current.play().catch((error) => console.error('Audio play failed:', error));
+        debugLog('Playing sound effect for state 2.');
+      }
     } else if (sensorState !== 2) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      debugLog('Stopping sound effect.');
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        debugLog('Stopping sound effect.');
+      }
     }
     prevStateRef.current = sensorState;
   }, [sensorState]);
 
-  return sensorState;
+  return { sensorState, angle, lastDeltaMotion, currentTime };
 }

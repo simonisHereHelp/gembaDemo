@@ -4,13 +4,11 @@ import styles from './styles.module.css';
 import { requestMotionPermission, useMotionState } from '@site/src/components/useMotionTracker';
 
 const HomepageHeader = () => {
-  // Initially, permission is set to false.
   const [permission, setPermission] = useState(false);
 
-  // Always call the custom hook to compute sensor state.
-  const sensorState = useMotionState();
+  // Pass the permission flag into the hook.
+  const { sensorState, angle, lastDeltaMotion, currentTime } = useMotionState(permission);
 
-  // Handler for the button click to request permission.
   const handleRequestPermission = () => {
     requestMotionPermission().then((granted) => {
       setPermission(granted);
@@ -20,15 +18,21 @@ const HomepageHeader = () => {
   return (
     <div className={styles.Container} style={{ height: 250 }}>
       <div style={{ position: 'relative', textAlign: 'left', width: 'max-content' }}>
-        <h1 className={styles.HeaderTitle}>Motion Tracker Demo v5</h1>
+        <h1 className={styles.HeaderTitle}>Motion Tracker Demo v5b</h1>
         <Spacer height={50} />
         {permission ? (
-          <span>State = {sensorState !== null ? sensorState : 'No Data'}</span>
+          <>
+            <span>State = {sensorState !== null ? sensorState : 'No Data'}</span>
+            <br />
+            <span>Angle = {angle !== null ? angle.toFixed(2) : 'No Data'}°</span>
+            <br />
+            <span>
+              Last Motion = {lastDeltaMotion ? `${currentTime - lastDeltaMotion} ms ago` : 'No Data'}
+            </span>
+          </>
         ) : (
           <>
-            <button onClick={handleRequestPermission}>
-              Activate Motion Tracking
-            </button>
+            <button onClick={handleRequestPermission}>Activate Motion Tracking</button>
             <Spacer height={50} />
             <span>Sensor permission required</span>
           </>
