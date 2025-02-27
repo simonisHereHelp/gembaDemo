@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import VideoChapters from '../components/VideoChapters';
-import { findChapterId } from '../components/findTimeStamp'; // Import the findChapterId utility
+import { findChapterId } from '../components/findTimeStamp';
 import loginIcon from '@site/static/img/log-in.png';
 import logoutIcon from '@site/static/img/log-out.png';
 import { requestMotionPermission, useMotionState } from '@site/src/components/useMotionTracker';
@@ -12,8 +12,8 @@ export const GlobalPhotoContext = createContext();
 const Root = ({ children }) => {
   const location = useLocation();
   const history = useHistory();
-  const [previousLocation, setPreviousLocation] = useState(null); // Store last visited path
-  const [savedPhotos, setSavedPhotos] = useState(Array(12).fill(null)); // Array to store 12 photos
+  const [previousLocation, setPreviousLocation] = useState(null);
+  const [savedPhotos, setSavedPhotos] = useState(Array(12).fill(null));
 
   // Global states for video and user
   const [initialized, setInitialized] = useState(false);
@@ -29,7 +29,6 @@ const Root = ({ children }) => {
   const [topCam, setTopCam] = useState(null);
   const [microCam, setMicroCam] = useState(null);
 
-  // Initialize localStorage camera mappings.
   const initializeLocalStored = () => {
     const storedMappings = JSON.parse(localStorage.getItem('cameraMappings')) || {};
     setFaceCam(storedMappings[1] || 'none');
@@ -46,7 +45,6 @@ const Root = ({ children }) => {
     initializeLocalStored();
   }, []);
 
-  // Lazy initialization of audio to avoid SSR issues.
   useEffect(() => {
     if (typeof window !== 'undefined') {
       import('@site/static/img/swoosh.mp3').then(({ default: audioSrc }) => {
@@ -74,41 +72,10 @@ const Root = ({ children }) => {
     }
     setPreviousLocation(location.pathname);
   }, [location.pathname, isVideoMode]);
-
-  // --- Motion sensor integration ---
-  // We'll use a local state for motion permission.
-  const [motionPermission, setMotionPermission] = useState(false);
-
-  // Request motion sensor permission only when user clicks.
+  
   useEffect(() => {
-    // Do not auto-request on mount; let the user trigger it.
-  }, []);
-
-  // Get motion sensor state from our custom hook.
-  // We pass motionPermission as the "enabled" flag.
-  const { sensorState, angle, lastDeltaMotion, currentTime: motionTime } = useMotionState(motionPermission);
-
-  // Navigation based on motion sensor state.
-  useEffect(() => {
-    if (!motionPermission) return; // only act if motion sensors are enabled
-    if (sensorState === 2) {
-      // If state equals 2, navigate to the webcam page.
-      if (location.pathname !== '/pages/myWebcam') {
-        history.push('/pages/myWebcam');
-      }
-    } else {
-      // If sensor state is not 2 and current location is myWebcam, return to previous location.
-      if (location.pathname === '/pages/myWebcam' && previousLocation) {
-        history.push(previousLocation);
-      }
-    }
-  }, [sensorState, motionPermission, history, location, previousLocation]);
-
-  const handleMotionPermission = () => {
-    requestMotionPermission().then((granted) => {
-      setMotionPermission(granted);
-    });
-  };
+    initializeLocalStored();
+  }, [initializeLocalStored]);
 
   const handleIconClick = () => {
     if (swishAudio.current) {
@@ -120,11 +87,39 @@ const Root = ({ children }) => {
     setIsFlipped((prev) => !prev);
     setLoginReturnLoc(location.pathname);
     if (!loginName) {
-      history.push('/golive_room2');
+      history.push('/nano_web');
     } else {
       history.push('/log-out-user');
     }
   };
+
+  // --- Motion sensor integration ---
+  const [motionPermission, setMotionPermission] = useState(false);
+
+  const handleMotionPermission = () => {
+    requestMotionPermission().then((granted) => {
+      setMotionPermission(granted);
+    });
+  };
+
+  // Pass motionPermission flag into the custom hook.
+  const { sensorState, angle, lastDeltaMotion, currentTime: motionTime } = useMotionState(motionPermission);
+
+  // Navigation based on motion sensor state.
+  useEffect(() => {
+    if (!motionPermission) return;
+    if (sensorState === 2) {
+      // If state equals 2, navigate to "/myWebcam"
+      if (location.pathname !== '/nano_web') {
+        history.push('/nano_web');
+      }
+    } else {
+      // If state is not 2 and current location is "/myWebcam", return to previous location.
+      if (location.pathname === '/nano_web' && previousLocation) {
+        history.push(previousLocation);
+      }
+    }
+  }, [sensorState, motionPermission, history, location, previousLocation]);
 
   return (
     <GlobalPhotoContext.Provider 
@@ -145,7 +140,7 @@ const Root = ({ children }) => {
       {children}
       <section>
         <div className={`bottom-nav-menu${isFlipped ? ' flip' : ''}`}>
-          <p>{loginName ? `User: ${loginName}` : 'My Webcam'}</p>
+          <p>{loginName ? `User: ${loginName}` : 'Jestson Board'}</p>
           {!loginName && (
             <div className="primaryButton center-align" onClick={handleIconClick}>
               <img
@@ -153,10 +148,11 @@ const Root = ({ children }) => {
                 alt={loginName ? 'Sign On' : 'Sign Off'}
                 className="nav-icon"
               />
-              {loginName ? 'Log Out' : 'Go Live!'}
+              {loginName ? 'Disconnect' : 'Connect'}
             </div>
           )}
-          {/* Motion sensor permission prompt */}
+
+          {/* Motion sensor permission prompt
           {!motionPermission && (
             <div style={{ marginTop: '1rem' }}>
               <button onClick={handleMotionPermission}>
@@ -165,6 +161,9 @@ const Root = ({ children }) => {
               <span style={{ marginLeft: '1rem' }}>Motion sensor permission required</span>
             </div>
           )}
+            
+         */}
+
         </div>
       </section>
     </GlobalPhotoContext.Provider>

@@ -56,9 +56,9 @@ const config = {
             className: 'navbar-left',
           },
           {
-            to: 'myWebcam',
+            to: 'nano_web',
             position: 'left',
-            label: 'My Webcam',
+            label: 'Jetson Board',
             className: 'navbar-left',
           },
           {
