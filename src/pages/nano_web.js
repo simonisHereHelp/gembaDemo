@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import fetchIP from "@site/src/components/fetch_ip";
 import useWebSocket from "react-use-websocket";
 import Layout from "@theme/Layout";
-import jetsonBoardImg from "@site/static/img/jetsonBoard.jpg"
+import jetsonBoardImg from "@site/static/img/jetsonBoard.jpg";
+
 export default function NanoWeb() {
   const [message, setMessage] = useState("Connecting...");
   const [nanoIP, setNanoIP] = useState("");
@@ -12,48 +13,70 @@ export default function NanoWeb() {
 
   useEffect(() => {
     fetchIP().then(ip => {
-      console.log("Fetched IP:", ip);  // ✅ Debugging: Log IP in Console
+      console.log("🔍 [DEBUG] Fetched IP from Firebase:", ip);  // ✅ Debugging: Log IP in Console
 
       if (!ip || ip === "localhost") {
-        setError("Invalid IP retrieved from Firebase!");
+        setError("❌ Invalid IP retrieved from Firebase!");
         return;
       }
 
       setNanoIP(ip);
       validateIP(ip); // ✅ Check if IP is reachable
     }).catch(err => {
-      setError("Failed to fetch IP: " + err.message);
+      setError("❌ Failed to fetch IP: " + err.message);
     });
   }, []);
 
   // ✅ Function to test if the IP is valid
   const validateIP = async (ip) => {
     try {
-      const response = await fetch(`http://${ip}:8765/ping`, { method: "HEAD" });
-      if (response.ok) {
-        console.log("✅ IP is reachable:", ip);
+      console.log("🔍 [DEBUG] Validating WebSocket at:", `ws://${ip}:8765`);
+      
+      const testSocket = new WebSocket(`ws://${ip}:8765`);
+  
+      testSocket.onopen = () => {
+        console.log("✅ WebSocket is valid and reachable:", ip);
         setIsValidIP(true);
         setSocketUrl(`ws://${ip}:8765`);
-      } else {
-        throw new Error("Server not responding");
-      }
+        testSocket.close();
+      };
+  
+      testSocket.onerror = (err) => {
+        console.error("❌ WebSocket unreachable:", err);
+        setError(`Fake or unreachable IP: ${ip}`);
+      };
+  
     } catch (error) {
-      console.error("❌ Fake or unreachable IP:", ip);
-      setError(`Fake or unreachable IP: ${ip}`);
+      console.error("❌ WebSocket Connection Failed:", error);
+      setError(`WebSocket Connection Failed: ${error.message}`);
     }
   };
+  
 
   const { sendMessage } = useWebSocket(socketUrl, {
-    onOpen: () => setMessage("Connected to WebSocket"),
-    onMessage: (event) => setMessage(event.data),
-    onError: (event) => setError("WebSocket Error: " + event.message),
+    onOpen: () => {
+      console.log("✅ [DEBUG] WebSocket Connected:", socketUrl);
+      setMessage("Connected to WebSocket");
+    },
+    onMessage: (event) => {
+      console.log("📩 [DEBUG] WebSocket Message Received:", event.data);
+      setMessage(event.data);
+    },
+    onError: (event) => {
+      console.error("❌ [DEBUG] WebSocket Error:", event);
+      setError("WebSocket Error: " + event.message);
+    },
+    onClose: () => {
+      console.warn("⚠️ [DEBUG] WebSocket Disconnected!");
+      setError("WebSocket Disconnected");
+    }
   }, isValidIP); // ✅ Only enable WebSocket if IP is valid
 
   return (
     <Layout title="Jetson Board" description="Edge AI session started">
       <div className="container">
         <h1>Jetson Nano WebSocket Dashboard</h1>
-        <img src={jetsonBoardImg}/>
+        <img src={jetsonBoardImg} />
         <p><strong>Jetson Nano IP:</strong> {nanoIP || "Fetching..."}</p>
         <p><strong>Status:</strong> {message}</p>
 

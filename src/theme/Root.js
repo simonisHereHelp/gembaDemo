@@ -43,7 +43,7 @@ const Root = ({ children }) => {
 
   useEffect(() => {
     initializeLocalStored();
-  }, []);
+  }, [initializeLocalStored]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
